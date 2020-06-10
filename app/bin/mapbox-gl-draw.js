@@ -26,4 +26,31 @@ var setupDraw = function setupDraw(options, api) {
   return api;
 };
 
-module.exports = function (opti
+module.exports = function (options) {
+  setupDraw(options, this);
+};
+
+},{"./src/api":25,"./src/constants":26,"./src/options":61,"./src/setup":63}],2:[function(require,module,exports){
+var wgs84 = require('wgs84');
+
+module.exports.geometry = geometry;
+module.exports.ring = ringArea;
+
+function geometry(_) {
+    var area = 0, i;
+    switch (_.type) {
+        case 'Polygon':
+            return polygonArea(_.coordinates);
+        case 'MultiPolygon':
+            for (i = 0; i < _.coordinates.length; i++) {
+                area += polygonArea(_.coordinates[i]);
+            }
+            return area;
+        case 'Point':
+        case 'MultiPoint':
+        case 'LineString':
+        case 'MultiLineString':
+            return 0;
+        case 'GeometryCollection':
+            for (i = 0; i < _.geometries.length; i++) {
+                area
