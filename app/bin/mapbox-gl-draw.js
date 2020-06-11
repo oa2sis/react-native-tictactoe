@@ -78,4 +78,29 @@ function polygonArea(coords) {
  * Reference:
  * Robert. G. Chamberlain and William H. Duquette, "Some Algorithms for
  *     Polygons on a Sphere", JPL Publication 07-03, Jet Propulsion
- *     Laboratory, Pasadena, CA, June 2007 http://trs-new.jpl.nasa.gov/dspace/handle/2014/4
+ *     Laboratory, Pasadena, CA, June 2007 http://trs-new.jpl.nasa.gov/dspace/handle/2014/40409
+ *
+ * Returns:
+ * {float} The approximate signed geodesic area of the polygon in square
+ *     meters.
+ */
+
+function ringArea(coords) {
+    var p1, p2, p3, lowerIndex, middleIndex, upperIndex, i,
+    area = 0,
+    coordsLength = coords.length;
+
+    if (coordsLength > 2) {
+        for (i = 0; i < coordsLength; i++) {
+            if (i === coordsLength - 2) {// i = N-2
+                lowerIndex = coordsLength - 2;
+                middleIndex = coordsLength -1;
+                upperIndex = 0;
+            } else if (i === coordsLength - 1) {// i = N-1
+                lowerIndex = coordsLength - 1;
+                middleIndex = 0;
+                upperIndex = 1;
+            } else { // i = 0 to N-3
+                lowerIndex = i;
+                middleIndex = i+1;
+           
