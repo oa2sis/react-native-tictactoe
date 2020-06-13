@@ -297,4 +297,24 @@ function hint(gj, options) {
         } else if (type && typeof _[name] !== type) {
             return errors.push({
                 message: '"' + name +
-            
+                    '" member should be ' + (type) +
+                    ', but is an ' + (typeof _[name]) + ' instead',
+                line: _.__line__
+            });
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.3
+    function FeatureCollection(featureCollection) {
+        crs(featureCollection);
+        bbox(featureCollection);
+        if (featureCollection.properties !== undefined) {
+            errors.push({
+                message: 'FeatureCollection object cannot contain a "properties" member',
+                line: featureCollection.__line__
+            });
+        }
+        if (featureCollection.coordinates !== undefined) {
+            errors.push({
+                message: 'FeatureCollection object cannot contain a "coordinates" member',
+                line: featureCollection.__l
