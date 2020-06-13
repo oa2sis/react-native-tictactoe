@@ -317,4 +317,28 @@ function hint(gj, options) {
         if (featureCollection.coordinates !== undefined) {
             errors.push({
                 message: 'FeatureCollection object cannot contain a "coordinates" member',
-                line: featureCollection.__l
+                line: featureCollection.__line__
+            });
+        }
+        if (!requiredProperty(featureCollection, 'features', 'array')) {
+            if (!everyIs(featureCollection.features, 'object')) {
+                return errors.push({
+                    message: 'Every feature must be an object',
+                    line: featureCollection.__line__
+                });
+            }
+            featureCollection.features.forEach(Feature);
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.1.1
+    function position(_, line) {
+        if (!Array.isArray(_)) {
+            return errors.push({
+                message: 'position should be an array, is a ' + (typeof _) +
+                    ' instead',
+                line: _.__line__ || line
+            });
+        }
+        if (_.length < 2) {
+            return errors.push(
