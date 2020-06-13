@@ -196,4 +196,31 @@ function hint(str, options) {
                 line: lineNumber - 1,
                 message: e.message,
                 error: e
-    
+            }];
+        }
+    } else {
+        return [{
+            message: 'Expected string or object as input',
+            line: 0
+        }];
+    }
+
+    errors = errors.concat(geojsonHintObject.hint(gj, options));
+
+    return errors;
+}
+
+module.exports.hint = hint;
+
+},{"./object":5,"jsonlint-lines":15}],5:[function(require,module,exports){
+var rightHandRule = require('./rhr');
+
+/**
+ * @alias geojsonhint
+ * @param {(string|object)} GeoJSON given as a string or as an object
+ * @param {Object} options
+ * @param {boolean} [options.noDuplicateMembers=true] forbid repeated
+ * properties. This is only available for string input, becaused parsed
+ * Objects cannot have duplicate properties.
+ * @param {boolean} [options.precisionWarning=true] warn if GeoJSON contains
+ * unnecessary coordina
