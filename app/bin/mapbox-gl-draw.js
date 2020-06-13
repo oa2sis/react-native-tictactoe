@@ -278,4 +278,23 @@ function hint(gj, options) {
                 message: '"' + name + '" member required',
                 line: _.__line__
             });
-        } else 
+        } else if (type === 'array') {
+            if (!Array.isArray(_[name])) {
+                return errors.push({
+                    message: '"' + name +
+                        '" member should be an array, but is an ' +
+                        (typeof _[name]) + ' instead',
+                    line: _.__line__
+                });
+            }
+        } else if (type === 'object' && _[name] && _[name].constructor.name !== 'Object') {
+            return errors.push({
+                message: '"' + name +
+                    '" member should be ' + (type) +
+                    ', but is an ' + (_[name].constructor.name) + ' instead',
+                line: _.__line__
+            });
+        } else if (type && typeof _[name] !== type) {
+            return errors.push({
+                message: '"' + name +
+            
