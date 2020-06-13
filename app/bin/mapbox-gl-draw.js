@@ -139,4 +139,37 @@ var types = {
  * Normalize a GeoJSON feature into a FeatureCollection.
  *
  * @param {object} gj geojson data
- * @returns {object} normalized
+ * @returns {object} normalized geojson data
+ */
+function normalize(gj) {
+    if (!gj || !gj.type) return null;
+    var type = types[gj.type];
+    if (!type) return null;
+
+    if (type === 'geometry') {
+        return {
+            type: 'FeatureCollection',
+            features: [{
+                type: 'Feature',
+                properties: {},
+                geometry: gj
+            }]
+        };
+    } else if (type === 'feature') {
+        return {
+            type: 'FeatureCollection',
+            features: [gj]
+        };
+    } else if (type === 'featurecollection') {
+        return gj;
+    }
+}
+
+},{}],4:[function(require,module,exports){
+var jsonlint = require('jsonlint-lines'),
+  geojsonHintObject = require('./object');
+
+/**
+ * @alias geojsonhint
+ * @param {(string|object)} GeoJSON given as a string or as an object
+ * @pa
