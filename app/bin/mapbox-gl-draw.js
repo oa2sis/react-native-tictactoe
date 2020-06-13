@@ -223,4 +223,32 @@ var rightHandRule = require('./rhr');
  * properties. This is only available for string input, becaused parsed
  * Objects cannot have duplicate properties.
  * @param {boolean} [options.precisionWarning=true] warn if GeoJSON contains
- * unnecessary coordina
+ * unnecessary coordinate precision.
+ * @returns {Array<Object>} an array of errors
+ */
+function hint(gj, options) {
+
+    var errors = [];
+    var precisionWarningCount = 0;
+    var maxPrecisionWarnings = 10;
+    var maxPrecision = 6;
+
+    function root(_) {
+
+        if ((!options || options.noDuplicateMembers !== false) &&
+           _.__duplicateProperties__) {
+            errors.push({
+                message: 'An object contained duplicate members, making parsing ambigous: ' + _.__duplicateProperties__.join(', '),
+                line: _.__line__
+            });
+        }
+
+        if (requiredProperty(_, 'type', 'string')) {
+            return;
+        }
+
+        if (!types[_.type]) {
+            var expectedType = typesLower[_.type.toLowerCase()];
+            if (expectedType !== undefined) {
+                errors.push({
+                    message
