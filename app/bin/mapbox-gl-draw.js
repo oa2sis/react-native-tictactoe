@@ -251,4 +251,31 @@ function hint(gj, options) {
             var expectedType = typesLower[_.type.toLowerCase()];
             if (expectedType !== undefined) {
                 errors.push({
-                    message
+                    message: 'Expected ' + expectedType + ' but got ' + _.type + ' (case sensitive)',
+                    line: _.__line__
+                });
+            } else {
+                errors.push({
+                    message: 'The type ' + _.type + ' is unknown',
+                    line: _.__line__
+                });
+            }
+        } else if (_) {
+            types[_.type](_);
+        }
+    }
+
+    function everyIs(_, type) {
+        // make a single exception because typeof null === 'object'
+        return _.every(function(x) {
+            return x !== null && typeof x === type;
+        });
+    }
+
+    function requiredProperty(_, name, type) {
+        if (typeof _[name] === 'undefined') {
+            return errors.push({
+                message: '"' + name + '" member required',
+                line: _.__line__
+            });
+        } else 
