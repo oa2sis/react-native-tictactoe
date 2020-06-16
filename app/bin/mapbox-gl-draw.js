@@ -341,4 +341,27 @@ function hint(gj, options) {
             });
         }
         if (_.length < 2) {
-            return errors.push(
+            return errors.push({
+                message: 'position must have 2 or more elements',
+                line: _.__line__ || line
+            });
+        }
+        if (_.length > 3) {
+            return errors.push({
+                message: 'position should not have more than 3 elements',
+                level: 'message',
+                line: _.__line__ || line
+            });
+        }
+        if (!everyIs(_, 'number')) {
+            return errors.push({
+                message: 'each element in a position must be a number',
+                line: _.__line__ || line
+            });
+        }
+
+        if (options && options.precisionWarning) {
+            if (precisionWarningCount === maxPrecisionWarnings) {
+                precisionWarningCount += 1;
+                return errors.push({
+                    message: 'truncated war
