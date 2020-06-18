@@ -364,4 +364,19 @@ function hint(gj, options) {
             if (precisionWarningCount === maxPrecisionWarnings) {
                 precisionWarningCount += 1;
                 return errors.push({
-                    message: 'truncated war
+                    message: 'truncated warnings: we\'ve encountered coordinate precision warning ' + maxPrecisionWarnings + ' times, no more warnings will be reported',
+                    level: 'message',
+                    line: _.__line__ || line
+                });
+            } else if (precisionWarningCount < maxPrecisionWarnings) {
+                _.forEach(function(num) {
+                    var precision = 0;
+                    var decimalStr = String(num).split('.')[1];
+                    if (decimalStr !== undefined)
+                        precision = decimalStr.length;
+                    if (precision > maxPrecision) {
+                        precisionWarningCount += 1;
+                        return errors.push({
+                            message: 'precision of coordinates should be reduced',
+                            level: 'message',
+   
