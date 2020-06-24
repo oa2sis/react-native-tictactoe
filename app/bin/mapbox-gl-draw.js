@@ -403,4 +403,22 @@ function hint(gj, options) {
                     });
                     return true;
                 }
-                if (coor
+                if (coords.length < 4) {
+                    errors.push({
+                        message: 'a LinearRing of coordinates needs to have four or more positions',
+                        line: line
+                    });
+                }
+                if (coords.length &&
+                    (coords[coords.length - 1].length !== coords[0].length ||
+                    !coords[coords.length - 1].every(function(pos, index) {
+                        return coords[0][index] === pos;
+                }))) {
+                    errors.push({
+                        message: 'the first and last positions in a LinearRing of coordinates must be the same',
+                        line: line
+                    });
+                    return true;
+                }
+            } else if (type === 'Line' && coords.length < 2) {
+                return 
