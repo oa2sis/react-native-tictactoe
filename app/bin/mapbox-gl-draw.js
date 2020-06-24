@@ -379,4 +379,28 @@ function hint(gj, options) {
                         return errors.push({
                             message: 'precision of coordinates should be reduced',
                             level: 'message',
-   
+                            line: _.__line__ || line
+                        });
+                    }
+                });
+            }
+        }
+    }
+
+    function positionArray(coords, type, depth, line) {
+        if (line === undefined && coords.__line__ !== undefined) {
+            line = coords.__line__;
+        }
+        if (depth === 0) {
+            return position(coords, line);
+        }
+        if (depth === 1 && type) {
+            if (type === 'LinearRing') {
+                if (!Array.isArray(coords[coords.length - 1])) {
+                    errors.push({
+                        message: 'a number was found where a coordinate array should have been found: this needs to be nested more deeply',
+                        line: line
+                    });
+                    return true;
+                }
+                if (coor
