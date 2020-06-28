@@ -421,4 +421,28 @@ function hint(gj, options) {
                     return true;
                 }
             } else if (type === 'Line' && coords.length < 2) {
-                return 
+                return errors.push({
+                    message: 'a line needs to have two or more coordinates to be valid',
+                    line: line
+                });
+            }
+        }
+        if (!Array.isArray(coords)) {
+            errors.push({
+                message: 'a number was found where a coordinate array should have been found: this needs to be nested more deeply',
+                line: line
+            });
+        } else {
+            var results = coords.map(function(c) {
+                return positionArray(c, type, depth - 1, c.__line__ || line);
+            });
+            return results.some(function(r) {
+                return r;
+            });
+        }
+    }
+
+    function crs(_) {
+        if (!_.crs) return;
+        var defaultCRSName = 'urn:ogc:def:crs:OGC:1.3:CRS84';
+        if (typeof _.crs === 'object' && _.c
