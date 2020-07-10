@@ -445,4 +445,27 @@ function hint(gj, options) {
     function crs(_) {
         if (!_.crs) return;
         var defaultCRSName = 'urn:ogc:def:crs:OGC:1.3:CRS84';
-        if (typeof _.crs === 'object' && _.c
+        if (typeof _.crs === 'object' && _.crs.properties && _.crs.properties.name === defaultCRSName) {
+            errors.push({
+                message: 'old-style crs member is not recommended, this object is equivalent to the default and should be removed',
+                line: _.__line__
+            });
+        } else {
+            errors.push({
+                message: 'old-style crs member is not recommended',
+                line: _.__line__
+            });
+        }
+    }
+
+    function bbox(_) {
+        if (!_.bbox) {
+            return;
+        }
+        if (Array.isArray(_.bbox)) {
+            if (!everyIs(_.bbox, 'number')) {
+                errors.push({
+                    message: 'each element in a bbox member must be a number',
+                    line: _.bbox.__line__
+                });
+     
