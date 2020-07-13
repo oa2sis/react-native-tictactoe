@@ -468,4 +468,26 @@ function hint(gj, options) {
                     message: 'each element in a bbox member must be a number',
                     line: _.bbox.__line__
                 });
-     
+            }
+            if (!(_.bbox.length === 4 || _.bbox.length === 6)) {
+                errors.push({
+                    message: 'bbox must contain 4 elements (for 2D) or 6 elements (for 3D)',
+                    line: _.bbox.__line__
+                });
+            }
+            return errors.length;
+        }
+        errors.push({
+            message: 'bbox member must be an array of numbers, but is a ' + (typeof _.bbox),
+            line: _.__line__
+        });
+    }
+
+    function geometrySemantics(geom) {
+        if (geom.properties !== undefined) {
+            errors.push({
+                message: 'geometry object cannot contain a "properties" member',
+                line: geom.__line__
+            });
+        }
+        if (geom.geometry !== u
