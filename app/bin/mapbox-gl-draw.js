@@ -541,4 +541,28 @@ function hint(gj, options) {
         crs(lineString);
         bbox(lineString);
         if (!requiredProperty(lineString, 'coordinates', 'array')) {
-            positionArray(lineString.c
+            positionArray(lineString.coordinates, 'Line', 1);
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.1.5
+    function MultiLineString(multiLineString) {
+        crs(multiLineString);
+        bbox(multiLineString);
+        if (!requiredProperty(multiLineString, 'coordinates', 'array')) {
+            positionArray(multiLineString.coordinates, 'Line', 2);
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.1.3
+    function MultiPoint(multiPoint) {
+        crs(multiPoint);
+        bbox(multiPoint);
+        if (!requiredProperty(multiPoint, 'coordinates', 'array')) {
+            positionArray(multiPoint.coordinates, '', 1);
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.1.8
+    function GeometryCollection(geometryCollection) {
+       
