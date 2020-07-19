@@ -603,4 +603,26 @@ function hint(gj, options) {
             typeof feature.id !== 'string' &&
             typeof feature.id !== 'number') {
             errors.push({
-          
+                message: 'Feature "id" member must have a string or number value',
+                line: feature.__line__
+            });
+        }
+        if (feature.features !== undefined) {
+            errors.push({
+                message: 'Feature object cannot contain a "features" member',
+                line: feature.__line__
+            });
+        }
+        if (feature.coordinates !== undefined) {
+            errors.push({
+                message: 'Feature object cannot contain a "coordinates" member',
+                line: feature.__line__
+            });
+        }
+        if (feature.type !== 'Feature') {
+            errors.push({
+                message: 'GeoJSON features must have a type=feature member',
+                line: feature.__line__
+            });
+        }
+        requiredProperty(feature, 'prope
