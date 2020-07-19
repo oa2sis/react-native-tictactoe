@@ -565,4 +565,19 @@ function hint(gj, options) {
 
     // https://tools.ietf.org/html/rfc7946#section-3.1.8
     function GeometryCollection(geometryCollection) {
-       
+        crs(geometryCollection);
+        bbox(geometryCollection);
+        if (!requiredProperty(geometryCollection, 'geometries', 'array')) {
+            if (!everyIs(geometryCollection.geometries, 'object')) {
+                errors.push({
+                    message: 'The geometries array in a GeometryCollection must contain only geometry objects',
+                    line: geometryCollection.__line__
+                });
+            }
+            if (geometryCollection.geometries.length === 1) {
+                errors.push({
+                    message: 'GeometryCollection with a single geometry should be avoided in favor of single part or a single object of multi-part type',
+                    line: geometryCollection.geometries.__line__
+                });
+            }
+            geometryCollection.geometries.forEach(functio
