@@ -580,4 +580,27 @@ function hint(gj, options) {
                     line: geometryCollection.geometries.__line__
                 });
             }
-            geometryCollection.geometries.forEach(functio
+            geometryCollection.geometries.forEach(function(geometry) {
+                if (geometry) {
+                    if (geometry.type === 'GeometryCollection') {
+                        errors.push({
+                            message: 'GeometryCollection should avoid nested geometry collections',
+                            line: geometryCollection.geometries.__line__
+                        });
+                    }
+                    root(geometry);
+                }
+            });
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.2
+    function Feature(feature) {
+        crs(feature);
+        bbox(feature);
+        // https://github.com/geojson/draft-geojson/blob/master/middle.mkd#feature-object
+        if (feature.id !== undefined &&
+            typeof feature.id !== 'string' &&
+            typeof feature.id !== 'number') {
+            errors.push({
+          
