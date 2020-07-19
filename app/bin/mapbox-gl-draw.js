@@ -490,4 +490,32 @@ function hint(gj, options) {
                 line: geom.__line__
             });
         }
-        if (geom.geometry !== u
+        if (geom.geometry !== undefined) {
+            errors.push({
+                message: 'geometry object cannot contain a "geometry" member',
+                line: geom.__line__
+            });
+        }
+        if (geom.features !== undefined) {
+            errors.push({
+                message: 'geometry object cannot contain a "features" member',
+                line: geom.__line__
+            });
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.1.2
+    function Point(point) {
+        crs(point);
+        bbox(point);
+        geometrySemantics(point);
+        if (!requiredProperty(point, 'coordinates', 'array')) {
+            position(point.coordinates);
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.1.6
+    function Polygon(polygon) {
+        crs(polygon);
+        bbox(polygon);
+        if 
