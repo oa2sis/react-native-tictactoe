@@ -654,3 +654,36 @@ function hint(gj, options) {
         gj === null ||
         gj === undefined) {
         errors.push({
+            message: 'The root of a GeoJSON object must be an object.',
+            line: 0
+        });
+        return errors;
+    }
+
+    root(gj);
+
+    errors.forEach(function(err) {
+        if ({}.hasOwnProperty.call(err, 'line') && err.line === undefined) {
+            delete err.line;
+        }
+    });
+
+    return errors;
+}
+
+module.exports.hint = hint;
+
+},{"./rhr":6}],6:[function(require,module,exports){
+function rad(x) {
+    return x * Math.PI / 180;
+}
+
+function isRingClockwise (coords) {
+    var area = 0;
+    if (coords.length > 2) {
+        var p1, p2;
+        for (var i = 0; i < coords.length - 1; i++) {
+            p1 = coords[i];
+            p2 = coords[i + 1];
+            area += rad(p2[0] - p1[0]) * (2 + Math.sin(rad(p1[1])) + Math.sin(rad(p2[1])));
+        
