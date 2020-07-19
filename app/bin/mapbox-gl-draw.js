@@ -625,4 +625,32 @@ function hint(gj, options) {
                 line: feature.__line__
             });
         }
-        requiredProperty(feature, 'prope
+        requiredProperty(feature, 'properties', 'object');
+        if (!requiredProperty(feature, 'geometry', 'object')) {
+            // https://tools.ietf.org/html/rfc7946#section-3.2
+            // tolerate null geometry
+            if (feature.geometry) root(feature.geometry);
+        }
+    }
+
+    var types = {
+        Point: Point,
+        Feature: Feature,
+        MultiPoint: MultiPoint,
+        LineString: LineString,
+        MultiLineString: MultiLineString,
+        FeatureCollection: FeatureCollection,
+        GeometryCollection: GeometryCollection,
+        Polygon: Polygon,
+        MultiPolygon: MultiPolygon
+    };
+
+    var typesLower = Object.keys(types).reduce(function(prev, curr) {
+        prev[curr.toLowerCase()] = curr;
+        return prev;
+    }, {});
+
+    if (typeof gj !== 'object' ||
+        gj === null ||
+        gj === undefined) {
+        errors.push({
