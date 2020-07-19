@@ -518,4 +518,27 @@ function hint(gj, options) {
     function Polygon(polygon) {
         crs(polygon);
         bbox(polygon);
-        if 
+        if (!requiredProperty(polygon, 'coordinates', 'array')) {
+            if (!positionArray(polygon.coordinates, 'LinearRing', 2)) {
+                rightHandRule(polygon, errors);
+            }
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.1.7
+    function MultiPolygon(multiPolygon) {
+        crs(multiPolygon);
+        bbox(multiPolygon);
+        if (!requiredProperty(multiPolygon, 'coordinates', 'array')) {
+            if (!positionArray(multiPolygon.coordinates, 'LinearRing', 3)) {
+                rightHandRule(multiPolygon, errors);
+            }
+        }
+    }
+
+    // https://tools.ietf.org/html/rfc7946#section-3.1.4
+    function LineString(lineString) {
+        crs(lineString);
+        bbox(lineString);
+        if (!requiredProperty(lineString, 'coordinates', 'array')) {
+            positionArray(lineString.c
