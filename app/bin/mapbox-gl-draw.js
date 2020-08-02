@@ -714,4 +714,36 @@ function rightHandRule (geometry) {
 module.exports = function validateRightHandRule(geometry, errors) {
     if (!rightHandRule(geometry)) {
         errors.push({
-            message: 'Polygons and MultiPolygons should follow the right-hand ru
+            message: 'Polygons and MultiPolygons should follow the right-hand rule',
+            level: 'message',
+            line: geometry.__line__
+        });
+    }
+};
+
+},{}],7:[function(require,module,exports){
+
+},{}],8:[function(require,module,exports){
+module.exports = Extent;
+
+function Extent() {
+    if (!(this instanceof Extent)) {
+        return new Extent();
+    }
+    this._bbox = [Infinity, Infinity, -Infinity, -Infinity];
+    this._valid = false;
+}
+
+Extent.prototype.include = function(ll) {
+    this._valid = true;
+    this._bbox[0] = Math.min(this._bbox[0], ll[0]);
+    this._bbox[1] = Math.min(this._bbox[1], ll[1]);
+    this._bbox[2] = Math.max(this._bbox[2], ll[0]);
+    this._bbox[3] = Math.max(this._bbox[3], ll[1]);
+    return this;
+};
+
+Extent.prototype.union = function(other) {
+    this._valid = true;
+    this._bbox[0] = Math.min(this._bbox[0], other[0]);
+    this._bbox[1] = Math.min(this._bb
