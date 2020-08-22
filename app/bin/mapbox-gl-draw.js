@@ -807,4 +807,30 @@ module.exports = function flatten(list, depth) {
 };
 
 },{}],10:[function(require,module,exports){
-var geojsonNormalize = require('geojson-normal
+var geojsonNormalize = require('geojson-normalize'),
+    geojsonFlatten = require('geojson-flatten'),
+    flatten = require('./flatten');
+
+module.exports = function(_) {
+    if (!_) return [];
+    var normalized = geojsonFlatten(geojsonNormalize(_)),
+        coordinates = [];
+    normalized.features.forEach(function(feature) {
+        if (!feature.geometry) return;
+        coordinates = coordinates.concat(flatten(feature.geometry.coordinates));
+    });
+    return coordinates;
+};
+
+},{"./flatten":9,"geojson-flatten":13,"geojson-normalize":11}],11:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],12:[function(require,module,exports){
+var geojsonCoords = require('geojson-coords'),
+    traverse = require('traverse'),
+    extent = require('extent');
+
+module.exports = function(_) {
+    return getExtent(_).bbox();
+};
+
+module.exports.polygon = function(_) 
