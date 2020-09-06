@@ -911,4 +911,38 @@ var hat = module.exports = function (bits, base) {
     var res = '';
 
     for (var i = 0; i < Math.floor(digits); i++) {
-        var x = Math.floor(Math.random() * base).toString(base)
+        var x = Math.floor(Math.random() * base).toString(base);
+        res = x + res;
+    }
+
+    if (rem) {
+        var b = Math.pow(base, rem);
+        var x = Math.floor(Math.random() * b).toString(base);
+        res = x + res;
+    }
+
+    var parsed = parseInt(res, base);
+    if (parsed !== Infinity && parsed >= Math.pow(2, bits)) {
+        return hat(bits, base)
+    }
+    else return res;
+};
+
+hat.rack = function (bits, base, expandBy) {
+    var fn = function (data) {
+        var iters = 0;
+        do {
+            if (iters ++ > 10) {
+                if (expandBy) bits += expandBy;
+                else throw new Error('too many ID collisions, use more bits')
+            }
+
+            var id = hat(bits, base);
+        } while (Object.hasOwnProperty.call(hats, id));
+
+        hats[id] = data;
+        return id;
+    };
+    var hats = fn.hats = {};
+
+    fn.get = function (id
