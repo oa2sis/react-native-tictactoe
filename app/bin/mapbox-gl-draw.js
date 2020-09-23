@@ -1092,4 +1092,31 @@ this.$ = {}; this.$[$$[$0][0]] = $$[$0][1];
 break;
 case 17:
 
-            this.$ 
+            this.$ = $$[$0-2];
+            if ($$[$0-2][$$[$0][0]] !== undefined) {
+                if (!this.$.__duplicateProperties__) {
+                    Object.defineProperty(this.$, '__duplicateProperties__', {
+                        value: [],
+                        enumerable: false
+                    });
+                }
+                this.$.__duplicateProperties__.push($$[$0][0]);
+            }
+            $$[$0-2][$$[$0][0]] = $$[$0][1];
+
+break;
+case 18:
+this.$ = []; Object.defineProperty(this.$, '__line__', {
+            value: this._$.first_line,
+            enumerable: false
+        })
+break;
+case 20:
+this.$ = [$$[$0]];
+break;
+case 21:
+this.$ = $$[$0-2]; $$[$0-2].push($$[$0]);
+break;
+}
+},
+table: [{3:5,4:$V0,5:6,6:$V1,7:3,8:$V2,9:4,10:$V3,11:$V4,12:1,13:2,15:7,16:8,17:$V5,23:$V6},{1:[3]},{14:[1,16]},o($V7,[2,7]),o($V7
