@@ -4097,4 +4097,37 @@ Traverse.prototype.forEach = function (cb) {
     return this.value;
 };
 
-T
+Traverse.prototype.reduce = function (cb, init) {
+    var skip = arguments.length === 1;
+    var acc = skip ? this.value : init;
+    this.forEach(function (x) {
+        if (!this.isRoot || !skip) {
+            acc = cb.call(this, acc, x);
+        }
+    });
+    return acc;
+};
+
+Traverse.prototype.paths = function () {
+    var acc = [];
+    this.forEach(function (x) {
+        acc.push(this.path);
+    });
+    return acc;
+};
+
+Traverse.prototype.nodes = function () {
+    var acc = [];
+    this.forEach(function (x) {
+        acc.push(this.node);
+    });
+    return acc;
+};
+
+Traverse.prototype.clone = function () {
+    var parents = [], nodes = [];
+
+    return (function clone (src) {
+        for (var i = 0; i < parents.length; i++) {
+            if (parents[i] === src) {
+                return no
