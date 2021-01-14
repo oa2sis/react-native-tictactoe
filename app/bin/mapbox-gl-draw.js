@@ -4191,4 +4191,27 @@ function walk (root, cb, immutable) {
                     state.parent.node.splice(state.key, 1);
                 }
                 else {
-      
+                    delete state.parent.node[state.key];
+                }
+                if (stopHere) keepGoing = false;
+            },
+            keys : null,
+            before : function (f) { modifiers.before = f },
+            after : function (f) { modifiers.after = f },
+            pre : function (f) { modifiers.pre = f },
+            post : function (f) { modifiers.post = f },
+            stop : function () { alive = false },
+            block : function () { keepGoing = false }
+        };
+
+        if (!alive) return state;
+
+        function updateState() {
+            if (typeof state.node === 'object' && state.node !== null) {
+                if (!state.keys || state.node_ !== state.node) {
+                    state.keys = objectKeys(state.node)
+                }
+
+                state.isLeaf = state.keys.length == 0;
+
+                for (var i
