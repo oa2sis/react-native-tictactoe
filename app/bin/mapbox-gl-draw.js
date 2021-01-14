@@ -4130,4 +4130,43 @@ Traverse.prototype.clone = function () {
     return (function clone (src) {
         for (var i = 0; i < parents.length; i++) {
             if (parents[i] === src) {
-                return no
+                return nodes[i];
+            }
+        }
+
+        if (typeof src === 'object' && src !== null) {
+            var dst = copy(src);
+
+            parents.push(src);
+            nodes.push(dst);
+
+            forEach(objectKeys(src), function (key) {
+                dst[key] = clone(src[key]);
+            });
+
+            parents.pop();
+            nodes.pop();
+            return dst;
+        }
+        else {
+            return src;
+        }
+    })(this.value);
+};
+
+function walk (root, cb, immutable) {
+    var path = [];
+    var parents = [];
+    var alive = true;
+
+    return (function walker (node_) {
+        var node = immutable ? copy(node_) : node_;
+        var modifiers = {};
+
+        var keepGoing = true;
+
+        var state = {
+            node : node,
+            node_ : node_,
+            path : [].concat(path),
+          
