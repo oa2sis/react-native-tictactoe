@@ -4214,4 +4214,32 @@ function walk (root, cb, immutable) {
 
                 state.isLeaf = state.keys.length == 0;
 
-                for (var i
+                for (var i = 0; i < parents.length; i++) {
+                    if (parents[i].node_ === node_) {
+                        state.circular = parents[i];
+                        break;
+                    }
+                }
+            }
+            else {
+                state.isLeaf = true;
+                state.keys = null;
+            }
+
+            state.notLeaf = !state.isLeaf;
+            state.notRoot = !state.isRoot;
+        }
+
+        updateState();
+
+        // use return values to update if defined
+        var ret = cb.call(state, state.node);
+        if (ret !== undefined && state.update) state.update(ret);
+
+        if (modifiers.before) modifiers.before.call(state, state.node);
+
+        if (!keepGoing) return state;
+
+        if (typeof state.node == 'object'
+        && state.node !== null && !state.circular) {
+         
