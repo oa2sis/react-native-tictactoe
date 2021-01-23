@@ -4242,4 +4242,35 @@ function walk (root, cb, immutable) {
 
         if (typeof state.node == 'object'
         && state.node !== null && !state.circular) {
-         
+            parents.push(state);
+
+            updateState();
+
+            forEach(state.keys, function (key, i) {
+                path.push(key);
+
+                if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
+
+                var child = walker(state.node[key]);
+                if (immutable && hasOwnProperty.call(state.node, key)) {
+                    state.node[key] = child.node;
+                }
+
+                child.isLast = i == state.keys.length - 1;
+                child.isFirst = i == 0;
+
+                if (modifiers.post) modifiers.post.call(state, child);
+
+                path.pop();
+            });
+            parents.pop();
+        }
+
+        if (modifiers.after) modifiers.after.call(state, state.node);
+
+        return state;
+    })(root).node;
+}
+
+function copy (src) {
+    if
