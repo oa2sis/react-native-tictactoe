@@ -4411,4 +4411,34 @@ module.exports = function (ctx, api) {
   api.modes = Constants.modes;
 
   api.getFeatureIdsAt = function (point) {
-    var features = fea
+    var features = featuresAt.click({ point: point }, null, ctx);
+    return features.map(function (feature) {
+      return feature.properties.id;
+    });
+  };
+
+  api.getSelectedIds = function () {
+    return ctx.store.getSelectedIds();
+  };
+
+  api.getStore = function () {
+    return ctx.store;
+  };
+
+  api.getSelected = function () {
+    return {
+      type: Constants.geojsonTypes.FEATURE_COLLECTION,
+      features: ctx.store.getSelectedIds().map(function (id) {
+        return ctx.store.get(id);
+      }).map(function (feature) {
+        return feature.toGeoJSON();
+      })
+    };
+  };
+
+  api.getSelectedPoints = function () {
+    return {
+      type: Constants.geojsonTypes.FEATURE_COLLECTION,
+      features: ctx.store.getSelectedCoordinates().map(function (coordinate) {
+        return {
+          type: Constants.geojsonTypes.FEATU
