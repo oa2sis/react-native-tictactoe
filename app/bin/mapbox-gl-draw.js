@@ -4389,4 +4389,26 @@ function extend() {
 'use strict';
 
 var isEqual = require('lodash.isequal');
-var normalize =
+var normalize = require('@mapbox/geojson-normalize');
+var hat = require('hat');
+var featuresAt = require('./lib/features_at');
+var stringSetsAreEqual = require('./lib/string_sets_are_equal');
+var geojsonhint = require('@mapbox/geojsonhint');
+var Constants = require('./constants');
+var StringSet = require('./lib/string_set');
+
+var featureTypes = {
+  Polygon: require('./feature_types/polygon'),
+  LineString: require('./feature_types/line_string'),
+  Point: require('./feature_types/point'),
+  MultiPolygon: require('./feature_types/multi_feature'),
+  MultiLineString: require('./feature_types/multi_feature'),
+  MultiPoint: require('./feature_types/multi_feature')
+};
+
+module.exports = function (ctx, api) {
+
+  api.modes = Constants.modes;
+
+  api.getFeatureIdsAt = function (point) {
+    var features = fea
