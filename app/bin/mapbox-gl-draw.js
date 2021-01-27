@@ -4492,3 +4492,30 @@ module.exports = function (ctx, api) {
         // If the feature has not yet been created ...
         var Model = featureTypes[feature.geometry.type];
         if (Model === undefined) {
+          throw new Error('Invalid geometry type: ' + feature.geometry.type + '.');
+        }
+        var internalFeature = new Model(ctx, feature);
+        ctx.store.add(internalFeature);
+      } else {
+        // If a feature of that id has already been created, and we are swapping it out ...
+        var _internalFeature = ctx.store.get(feature.id);
+        _internalFeature.properties = feature.properties;
+        if (!isEqual(_internalFeature.getCoordinates(), feature.geometry.coordinates)) {
+          _internalFeature.incomingCoords(feature.geometry.coordinates);
+        }
+      }
+      return feature.id;
+    });
+
+    ctx.store.render();
+    return ids;
+  };
+
+  api.get = function (id) {
+    var feature = ctx.store.get(id);
+    if (feature) {
+      return feature.toGeoJSON();
+    }
+  };
+
+  api.get
