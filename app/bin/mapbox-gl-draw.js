@@ -4441,4 +4441,28 @@ module.exports = function (ctx, api) {
       type: Constants.geojsonTypes.FEATURE_COLLECTION,
       features: ctx.store.getSelectedCoordinates().map(function (coordinate) {
         return {
-          type: Constants.geojsonTypes.FEATU
+          type: Constants.geojsonTypes.FEATURE,
+          properties: {},
+          geometry: {
+            type: Constants.geojsonTypes.POINT,
+            coordinates: coordinate.coordinates
+          }
+        };
+      })
+    };
+  };
+
+  api.set = function (featureCollection) {
+    if (featureCollection.type === undefined || featureCollection.type !== Constants.geojsonTypes.FEATURE_COLLECTION || !Array.isArray(featureCollection.features)) {
+      throw new Error('Invalid FeatureCollection');
+    }
+    var renderBatch = ctx.store.createRenderBatch();
+    var toDelete = ctx.store.getAllIds().slice();
+    var newIds = api.add(featureCollection);
+    var newIdsLookup = new StringSet(newIds);
+
+    toDelete = toDelete.filter(function (id) {
+      return !newIdsLookup.has(id);
+    });
+    if (toDelete.length) {
+      a
