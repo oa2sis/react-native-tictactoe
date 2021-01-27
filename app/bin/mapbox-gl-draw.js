@@ -4465,4 +4465,30 @@ module.exports = function (ctx, api) {
       return !newIdsLookup.has(id);
     });
     if (toDelete.length) {
-      a
+      api.delete(toDelete);
+    }
+
+    renderBatch();
+    return newIds;
+  };
+
+  api.add = function (geojson) {
+    var errors = geojsonhint.hint(geojson, { precisionWarning: false }).filter(function (e) {
+      return e.level !== 'message';
+    });
+    if (errors.length) {
+      throw new Error(errors[0].message);
+    }
+    var featureCollection = JSON.parse(JSON.stringify(normalize(geojson)));
+
+    var ids = featureCollection.features.map(function (feature) {
+      feature.id = feature.id || hat();
+
+      if (feature.geometry === null) {
+        throw new Error('Invalid geometry: null');
+      }
+
+      if (ctx.store.get(feature.id) === undefined || ctx.store.get(feature.id).type !== feature.geometry.type) {
+        // If the feature has not yet been created ...
+        var Model = featureTypes[feature.geometry.type];
+        if (Model === undefined) {
