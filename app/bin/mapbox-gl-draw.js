@@ -4518,4 +4518,28 @@ module.exports = function (ctx, api) {
     }
   };
 
-  api.get
+  api.getAll = function () {
+    return {
+      type: Constants.geojsonTypes.FEATURE_COLLECTION,
+      features: ctx.store.getAll().map(function (feature) {
+        return feature.toGeoJSON();
+      })
+    };
+  };
+
+  api.delete = function (featureIds) {
+    ctx.store.delete(featureIds, { silent: true });
+    // If we were in direct select mode and our selected feature no longer exists
+    // (because it was deleted), we need to get out of that mode.
+    if (api.getMode() === Constants.modes.DIRECT_SELECT && !ctx.store.getSelectedIds().length) {
+      ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, undefined, { silent: true });
+    } else {
+      ctx.store.render();
+    }
+
+    return api;
+  };
+
+  api.deleteAll = function () {
+    ctx.store.delete(ctx.store.getAllIds(), { silent: true });
+    // If we were in direct select mode, now our selected feature no longer exists,
