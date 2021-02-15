@@ -4543,3 +4543,22 @@ module.exports = function (ctx, api) {
   api.deleteAll = function () {
     ctx.store.delete(ctx.store.getAllIds(), { silent: true });
     // If we were in direct select mode, now our selected feature no longer exists,
+    // so escape that mode.
+    if (api.getMode() === Constants.modes.DIRECT_SELECT) {
+      ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, undefined, { silent: true });
+    } else {
+      ctx.store.render();
+    }
+
+    return api;
+  };
+
+  api.changeMode = function (mode) {
+    var modeOptions = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    // Avoid changing modes just to re-select what's already selected
+    if (mode === Constants.modes.SIMPLE_SELECT && api.getMode() === Constants.modes.SIMPLE_SELECT) {
+      if (stringSetsAreEqual(modeOptions.featureIds || [], ctx.store.getSelectedIds())) return api;
+      // And if we are changing the selection within simple_select mode, just change the selection,
+      // instead of stopping and re-starting the mode
+      ctx.store.setSelect
