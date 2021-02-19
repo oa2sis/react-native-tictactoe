@@ -4561,4 +4561,36 @@ module.exports = function (ctx, api) {
       if (stringSetsAreEqual(modeOptions.featureIds || [], ctx.store.getSelectedIds())) return api;
       // And if we are changing the selection within simple_select mode, just change the selection,
       // instead of stopping and re-starting the mode
-      ctx.store.setSelect
+      ctx.store.setSelected(modeOptions.featureIds, { silent: true });
+      ctx.store.render();
+      return api;
+    }
+
+    if (mode === Constants.modes.DIRECT_SELECT && api.getMode() === Constants.modes.DIRECT_SELECT && modeOptions.featureId === ctx.store.getSelectedIds()[0]) {
+      return api;
+    }
+
+    ctx.events.changeMode(mode, modeOptions, { silent: true });
+    return api;
+  };
+
+  api.getMode = function () {
+    return ctx.events.getMode();
+  };
+
+  api.trash = function () {
+    ctx.events.trash({ silent: true });
+    return api;
+  };
+
+  api.combineFeatures = function () {
+    ctx.events.combineFeatures({ silent: true });
+    return api;
+  };
+
+  api.uncombineFeatures = function () {
+    ctx.events.uncombineFeatures({ silent: true });
+    return api;
+  };
+
+  api.setFeatureProperty = function (featureId, proper
