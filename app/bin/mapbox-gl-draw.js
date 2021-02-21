@@ -4593,4 +4593,23 @@ module.exports = function (ctx, api) {
     return api;
   };
 
-  api.setFeatureProperty = function (featureId, proper
+  api.setFeatureProperty = function (featureId, property, value) {
+    ctx.store.setFeatureProperty(featureId, property, value);
+    return api;
+  };
+
+  return api;
+};
+
+},{"./constants":26,"./feature_types/line_string":29,"./feature_types/multi_feature":30,"./feature_types/point":31,"./feature_types/polygon":32,"./lib/features_at":40,"./lib/string_set":50,"./lib/string_sets_are_equal":51,"@mapbox/geojson-normalize":3,"@mapbox/geojsonhint":4,"hat":14,"lodash.isequal":17}],26:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+  classes: {
+    CONTROL_BASE: 'mapboxgl-ctrl',
+    CONTROL_PREFIX: 'mapboxgl-ctrl-',
+    CONTROL_BUTTON: 'mapbox-gl-draw_ctrl-draw-btn',
+    CONTROL_BUTTON_LINE: 'mapbox-gl-draw_line',
+    CONTROL_BUTTON_POLYGON: 'mapbox-gl-draw_polygon',
+    CONTROL_BUTTON_POINT: 'mapbox-gl-draw_point',
+    CONTROL_BUTTON_TRASH: 'mapbox
