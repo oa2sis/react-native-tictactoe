@@ -4673,4 +4673,32 @@ module.exports = {
   meta: {
     FEATURE: 'feature',
     MIDPOINT: 'midpoint',
-    VERT
+    VERTEX: 'vertex'
+  },
+  activeStates: {
+    ACTIVE: 'true',
+    INACTIVE: 'false'
+  },
+  LAT_MIN: -90,
+  LAT_RENDERED_MIN: -85,
+  LAT_MAX: 90,
+  LAT_RENDERED_MAX: 85,
+  LNG_MIN: -270,
+  LNG_MAX: 270
+};
+
+},{}],27:[function(require,module,exports){
+'use strict';
+
+var _modes;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var setupModeHandler = require('./lib/mode_handler');
+var getFeaturesAndSetCursor = require('./lib/get_features_and_set_cursor');
+var featuresAt = require('./lib/features_at');
+var isClick = require('./lib/is_click');
+var isTap = require('./lib/is_tap');
+var Constants = require('./constants');
+
+var modes = (_modes = {}, _definePrope
