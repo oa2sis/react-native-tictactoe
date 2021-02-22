@@ -4612,4 +4612,35 @@ module.exports = {
     CONTROL_BUTTON_LINE: 'mapbox-gl-draw_line',
     CONTROL_BUTTON_POLYGON: 'mapbox-gl-draw_polygon',
     CONTROL_BUTTON_POINT: 'mapbox-gl-draw_point',
-    CONTROL_BUTTON_TRASH: 'mapbox
+    CONTROL_BUTTON_TRASH: 'mapbox-gl-draw_trash',
+    CONTROL_BUTTON_COMBINE_FEATURES: 'mapbox-gl-draw_combine',
+    CONTROL_BUTTON_UNCOMBINE_FEATURES: 'mapbox-gl-draw_uncombine',
+    CONTROL_GROUP: 'mapboxgl-ctrl-group',
+    ATTRIBUTION: 'mapboxgl-ctrl-attrib',
+    ACTIVE_BUTTON: 'active',
+    BOX_SELECT: 'mapbox-gl-draw_boxselect'
+  },
+  sources: {
+    HOT: 'mapbox-gl-draw-hot',
+    COLD: 'mapbox-gl-draw-cold'
+  },
+  cursors: {
+    ADD: 'add',
+    MOVE: 'move',
+    DRAG: 'drag',
+    POINTER: 'pointer',
+    NONE: 'none'
+  },
+  types: {
+    POLYGON: 'polygon',
+    LINE: 'line_string',
+    POINT: 'point'
+  },
+  geojsonTypes: {
+    FEATURE: 'Feature',
+    POLYGON: 'Polygon',
+    LINE_STRING: 'LineString',
+    POINT: 'Point',
+    FEATURE_COLLECTION: 'FeatureCollection',
+    MULTI_PREFIX: 'Multi',
+    MULTI_POINT: 'Multi
