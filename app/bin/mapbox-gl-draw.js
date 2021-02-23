@@ -4701,4 +4701,15 @@ var isClick = require('./lib/is_click');
 var isTap = require('./lib/is_tap');
 var Constants = require('./constants');
 
-var modes = (_modes = {}, _definePrope
+var modes = (_modes = {}, _defineProperty(_modes, Constants.modes.SIMPLE_SELECT, require('./modes/simple_select')), _defineProperty(_modes, Constants.modes.DIRECT_SELECT, require('./modes/direct_select')), _defineProperty(_modes, Constants.modes.DRAW_POINT, require('./modes/draw_point')), _defineProperty(_modes, Constants.modes.DRAW_LINE_STRING, require('./modes/draw_line_string')), _defineProperty(_modes, Constants.modes.DRAW_POLYGON, require('./modes/draw_polygon')), _defineProperty(_modes, Constants.modes.STATIC, require('./modes/static')), _modes);
+
+module.exports = function (ctx) {
+
+  var mouseDownInfo = {};
+  var touchStartInfo = {};
+  var events = {};
+  var _currentModeName = Constants.modes.SIMPLE_SELECT;
+  var currentMode = setupModeHandler(modes.simple_select(ctx), ctx);
+
+  events.drag = function (event, isDrag) {
+    if (
