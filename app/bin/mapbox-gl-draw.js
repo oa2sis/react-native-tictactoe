@@ -4740,4 +4740,38 @@ module.exports = function (ctx) {
     if (button === 1) {
       return events.mousedrag(event);
     }
-    var target = getFeaturesAndSetCursor(even
+    var target = getFeaturesAndSetCursor(event, ctx);
+    event.featureTarget = target;
+    currentMode.mousemove(event);
+  };
+
+  events.mousedown = function (event) {
+    mouseDownInfo = {
+      time: new Date().getTime(),
+      point: event.point
+    };
+    var target = getFeaturesAndSetCursor(event, ctx);
+    event.featureTarget = target;
+    currentMode.mousedown(event);
+  };
+
+  events.mouseup = function (event) {
+    var target = getFeaturesAndSetCursor(event, ctx);
+    event.featureTarget = target;
+
+    if (isClick(mouseDownInfo, {
+      point: event.point,
+      time: new Date().getTime()
+    })) {
+      currentMode.click(event);
+    } else {
+      currentMode.mouseup(event);
+    }
+  };
+
+  events.mouseout = function (event) {
+    currentMode.mouseout(event);
+  };
+
+  events.touchstart = function (event) {
+    // Prevent emulated mouse events because w
