@@ -4712,4 +4712,32 @@ module.exports = function (ctx) {
   var currentMode = setupModeHandler(modes.simple_select(ctx), ctx);
 
   events.drag = function (event, isDrag) {
-    if (
+    if (isDrag({
+      point: event.point,
+      time: new Date().getTime()
+    })) {
+      ctx.ui.queueMapClasses({ mouse: Constants.cursors.DRAG });
+      currentMode.drag(event);
+    } else {
+      event.originalEvent.stopPropagation();
+    }
+  };
+
+  events.mousedrag = function (event) {
+    events.drag(event, function (endInfo) {
+      return !isClick(mouseDownInfo, endInfo);
+    });
+  };
+
+  events.touchdrag = function (event) {
+    events.drag(event, function (endInfo) {
+      return !isTap(touchStartInfo, endInfo);
+    });
+  };
+
+  events.mousemove = function (event) {
+    var button = event.originalEvent.buttons !== undefined ? event.originalEvent.buttons : event.originalEvent.which;
+    if (button === 1) {
+      return events.mousedrag(event);
+    }
+    var target = getFeaturesAndSetCursor(even
