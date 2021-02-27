@@ -4774,4 +4774,36 @@ module.exports = function (ctx) {
   };
 
   events.touchstart = function (event) {
-    // Prevent emulated mouse events because w
+    // Prevent emulated mouse events because we will fully handle the touch here.
+    // This does not stop the touch events from propogating to mapbox though.
+    event.originalEvent.preventDefault();
+    if (!ctx.options.touchEnabled) {
+      return;
+    }
+
+    touchStartInfo = {
+      time: new Date().getTime(),
+      point: event.point
+    };
+    var target = featuresAt.touch(event, null, ctx)[0];
+    event.featureTarget = target;
+    currentMode.touchstart(event);
+  };
+
+  events.touchmove = function (event) {
+    event.originalEvent.preventDefault();
+    if (!ctx.options.touchEnabled) {
+      return;
+    }
+
+    currentMode.touchmove(event);
+    return events.touchdrag(event);
+  };
+
+  events.touchend = function (event) {
+    event.originalEvent.preventDefault();
+    if (!ctx.options.touchEnabled) {
+      return;
+    }
+
+    var ta
