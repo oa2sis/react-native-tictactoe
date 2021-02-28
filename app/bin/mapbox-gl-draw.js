@@ -4806,4 +4806,31 @@ module.exports = function (ctx) {
       return;
     }
 
-    var ta
+    var target = featuresAt.touch(event, null, ctx)[0];
+    event.featureTarget = target;
+    if (isTap(touchStartInfo, {
+      time: new Date().getTime(),
+      point: event.point
+    })) {
+      currentMode.tap(event);
+    } else {
+      currentMode.touchend(event);
+    }
+  };
+
+  // 8 - Backspace
+  // 46 - Delete
+  var isKeyModeValid = function isKeyModeValid(code) {
+    return !(code === 8 || code === 46 || code >= 48 && code <= 57);
+  };
+
+  events.keydown = function (event) {
+
+    if ((event.keyCode === 8 || event.keyCode === 46) && ctx.options.controls.trash) {
+      event.preventDefault();
+      currentMode.trash();
+    } else if (isKeyModeValid(event.keyCode)) {
+      currentMode.keydown(event);
+    } else if (event.keyCode === 49 && ctx.options.controls.point) {
+      changeMode(Constants.modes.DRAW_POINT);
+   
