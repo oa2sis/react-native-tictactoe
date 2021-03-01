@@ -4833,4 +4833,33 @@ module.exports = function (ctx) {
       currentMode.keydown(event);
     } else if (event.keyCode === 49 && ctx.options.controls.point) {
       changeMode(Constants.modes.DRAW_POINT);
-   
+    } else if (event.keyCode === 50 && ctx.options.controls.line_string) {
+      changeMode(Constants.modes.DRAW_LINE_STRING);
+    } else if (event.keyCode === 51 && ctx.options.controls.polygon) {
+      changeMode(Constants.modes.DRAW_POLYGON);
+    }
+  };
+
+  events.keyup = function (event) {
+    if (isKeyModeValid(event.keyCode)) {
+      currentMode.keyup(event);
+    }
+  };
+
+  events.zoomend = function () {
+    ctx.store.changeZoom();
+  };
+
+  events.data = function (event) {
+    if (event.dataType === 'style') {
+      (function () {
+        var setup = ctx.setup;
+        var map = ctx.map;
+        var options = ctx.options;
+        var store = ctx.store;
+
+        var hasLayers = options.styles.some(function (style) {
+          return map.getLayer(style.id);
+        });
+        if (!hasLayers) {
+          setu
