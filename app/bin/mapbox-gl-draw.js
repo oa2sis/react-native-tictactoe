@@ -4862,4 +4862,34 @@ module.exports = function (ctx) {
           return map.getLayer(style.id);
         });
         if (!hasLayers) {
-          setu
+          setup.addLayers();
+          store.setDirty();
+          store.render();
+        }
+      })();
+    }
+  };
+
+  function changeMode(modename) {
+    var nextModeOptions = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    var eventOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+    currentMode.stop();
+
+    var modebuilder = modes[modename];
+    if (modebuilder === undefined) {
+      throw new Error(modename + ' is not valid');
+    }
+    _currentModeName = modename;
+    var mode = modebuilder(ctx, nextModeOptions);
+    currentMode = setupModeHandler(mode, ctx);
+
+    if (!eventOptions.silent) {
+      ctx.map.fire(Constants.events.MODE_CHANGE, { mode: modename });
+    }
+
+    ctx.store.setDirty();
+    ctx.store.render();
+  }
+
+  var ac
