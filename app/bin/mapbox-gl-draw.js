@@ -4918,4 +4918,26 @@ module.exports = function (ctx) {
       return currentMode.render(geojson, push);
     },
     fire: function fire(name, event) {
-    
+      if (events[name]) {
+        events[name](event);
+      }
+    },
+    addEventListeners: function addEventListeners() {
+      ctx.map.on('mousemove', events.mousemove);
+      ctx.map.on('mousedown', events.mousedown);
+      ctx.map.on('mouseup', events.mouseup);
+      ctx.map.on('data', events.data);
+
+      ctx.map.on('touchmove', events.touchmove);
+      ctx.map.on('touchstart', events.touchstart);
+      ctx.map.on('touchend', events.touchend);
+
+      ctx.container.addEventListener('mouseout', events.mouseout);
+
+      if (ctx.options.keybindings) {
+        ctx.container.addEventListener('keydown', events.keydown);
+        ctx.container.addEventListener('keyup', events.keyup);
+      }
+    },
+    removeEventListeners: function removeEventListeners() {
+      ctx.map.off('mousemove', events.mousemove)
