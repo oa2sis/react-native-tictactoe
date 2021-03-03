@@ -4892,4 +4892,30 @@ module.exports = function (ctx) {
     ctx.store.render();
   }
 
-  var ac
+  var actionState = {
+    trash: false,
+    combineFeatures: false,
+    uncombineFeatures: false
+  };
+
+  function actionable(actions) {
+    var changed = false;
+    Object.keys(actions).forEach(function (action) {
+      if (actionState[action] === undefined) throw new Error('Invalid action type');
+      if (actionState[action] !== actions[action]) changed = true;
+      actionState[action] = actions[action];
+    });
+    if (changed) ctx.map.fire(Constants.events.ACTIONABLE, { actions: actionState });
+  }
+
+  var api = {
+    changeMode: changeMode,
+    actionable: actionable,
+    currentModeName: function currentModeName() {
+      return _currentModeName;
+    },
+    currentModeRender: function currentModeRender(geojson, push) {
+      return currentMode.render(geojson, push);
+    },
+    fire: function fire(name, event) {
+    
