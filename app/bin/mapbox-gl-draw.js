@@ -4940,4 +4940,27 @@ module.exports = function (ctx) {
       }
     },
     removeEventListeners: function removeEventListeners() {
-      ctx.map.off('mousemove', events.mousemove)
+      ctx.map.off('mousemove', events.mousemove);
+      ctx.map.off('mousedown', events.mousedown);
+      ctx.map.off('mouseup', events.mouseup);
+      ctx.map.off('data', events.data);
+
+      ctx.map.off('touchmove', events.touchmove);
+      ctx.map.off('touchstart', events.touchstart);
+      ctx.map.off('touchend', events.touchend);
+
+      ctx.container.removeEventListener('mouseout', events.mouseout);
+
+      if (ctx.options.keybindings) {
+        ctx.container.removeEventListener('keydown', events.keydown);
+        ctx.container.removeEventListener('keyup', events.keyup);
+      }
+    },
+    trash: function trash(options) {
+      currentMode.trash(options);
+    },
+    combineFeatures: function combineFeatures() {
+      currentMode.combineFeatures();
+    },
+    uncombineFeatures: function uncombineFeatures() {
+      currentMode.un
