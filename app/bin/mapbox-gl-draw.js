@@ -4963,4 +4963,28 @@ module.exports = function (ctx) {
       currentMode.combineFeatures();
     },
     uncombineFeatures: function uncombineFeatures() {
-      currentMode.un
+      currentMode.uncombineFeatures();
+    },
+    getMode: function getMode() {
+      return _currentModeName;
+    }
+  };
+
+  return api;
+};
+
+},{"./constants":26,"./lib/features_at":40,"./lib/get_features_and_set_cursor":41,"./lib/is_click":42,"./lib/is_tap":44,"./lib/mode_handler":46,"./modes/direct_select":55,"./modes/draw_line_string":56,"./modes/draw_point":57,"./modes/draw_polygon":58,"./modes/simple_select":59,"./modes/static":60}],28:[function(require,module,exports){
+'use strict';
+
+var hat = require('hat');
+var Constants = require('../constants');
+
+var Feature = function Feature(ctx, geojson) {
+  this.ctx = ctx;
+  this.properties = geojson.properties || {};
+  this.coordinates = geojson.geometry.coordinates;
+  this.id = geojson.id || hat();
+  this.type = geojson.geometry.type;
+};
+
+Feature.prototype.changed = fu
