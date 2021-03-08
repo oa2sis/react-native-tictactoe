@@ -5024,4 +5024,44 @@ Feature.prototype.internal = function (mode) {
   var properties = {
     id: this.id,
     meta: Constants.meta.FEATURE,
-    'meta:type': this.typ
+    'meta:type': this.type,
+    active: Constants.activeStates.INACTIVE,
+    mode: mode
+  };
+
+  if (this.ctx.options.userProperties) {
+    for (var name in this.properties) {
+      properties['user_' + name] = this.properties[name];
+    }
+  }
+
+  return {
+    type: Constants.geojsonTypes.FEATURE,
+    properties: properties,
+    geometry: {
+      coordinates: this.getCoordinates(),
+      type: this.type
+    }
+  };
+};
+
+module.exports = Feature;
+
+},{"../constants":26,"hat":14}],29:[function(require,module,exports){
+'use strict';
+
+var Feature = require('./feature');
+
+var LineString = function LineString(ctx, geojson) {
+  Feature.call(this, ctx, geojson);
+};
+
+LineString.prototype = Object.create(Feature.prototype);
+
+LineString.prototype.isValid = function () {
+  return this.coordinates.length > 1;
+};
+
+LineString.prototype.addCoordinate = function (path, lng, lat) {
+  this.changed();
+  var id = parseIn
