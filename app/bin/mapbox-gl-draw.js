@@ -5095,4 +5095,29 @@ var hat = require('hat');
 
 var models = {
   MultiPoint: require('./point'),
-  MultiLineString: require
+  MultiLineString: require('./line_string'),
+  MultiPolygon: require('./polygon')
+};
+
+var takeAction = function takeAction(features, action, path, lng, lat) {
+  var parts = path.split('.');
+  var idx = parseInt(parts[0], 10);
+  var tail = !parts[1] ? null : parts.slice(1).join('.');
+  return features[idx][action](tail, lng, lat);
+};
+
+var MultiFeature = function MultiFeature(ctx, geojson) {
+  Feature.call(this, ctx, geojson);
+
+  delete this.coordinates;
+  this.model = models[geojson.geometry.type];
+  if (this.model === undefined) throw new TypeError(geojson.geometry.type + ' is not a valid type');
+  this.features = this._coordinatesToFeatures(geojson.geometry.coordinates);
+};
+
+MultiFeature.prototype = Object.create(Feature.prototype);
+
+MultiFeature.prototype._coordinatesToFeatures = function (coordinates) {
+  var _this = this;
+
+  var Model = this.model.bind(th
