@@ -5120,4 +5120,34 @@ MultiFeature.prototype = Object.create(Feature.prototype);
 MultiFeature.prototype._coordinatesToFeatures = function (coordinates) {
   var _this = this;
 
-  var Model = this.model.bind(th
+  var Model = this.model.bind(this);
+  return coordinates.map(function (coords) {
+    return new Model(_this.ctx, {
+      id: hat(),
+      type: Constants.geojsonTypes.FEATURE,
+      properties: {},
+      geometry: {
+        coordinates: coords,
+        type: _this.type.replace('Multi', '')
+      }
+    });
+  });
+};
+
+MultiFeature.prototype.isValid = function () {
+  return this.features.every(function (f) {
+    return f.isValid();
+  });
+};
+
+MultiFeature.prototype.setCoordinates = function (coords) {
+  this.features = this._coordinatesToFeatures(coords);
+  this.changed();
+};
+
+MultiFeature.prototype.getCoordinate = function (path) {
+  return takeAction(this.features, 'getCoordinate', path);
+};
+
+MultiFeature.prototype.getCoordinates = function () {
+  return JSON.parse(JSON.stringify(this.f
