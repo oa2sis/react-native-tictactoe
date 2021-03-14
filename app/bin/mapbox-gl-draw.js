@@ -5150,4 +5150,32 @@ MultiFeature.prototype.getCoordinate = function (path) {
 };
 
 MultiFeature.prototype.getCoordinates = function () {
-  return JSON.parse(JSON.stringify(this.f
+  return JSON.parse(JSON.stringify(this.features.map(function (f) {
+    if (f.type === Constants.geojsonTypes.POLYGON) return f.getCoordinates();
+    return f.coordinates;
+  })));
+};
+
+MultiFeature.prototype.updateCoordinate = function (path, lng, lat) {
+  takeAction(this.features, 'updateCoordinate', path, lng, lat);
+  this.changed();
+};
+
+MultiFeature.prototype.addCoordinate = function (path, lng, lat) {
+  takeAction(this.features, 'addCoordinate', path, lng, lat);
+  this.changed();
+};
+
+MultiFeature.prototype.removeCoordinate = function (path) {
+  takeAction(this.features, 'removeCoordinate', path);
+  this.changed();
+};
+
+MultiFeature.prototype.getFeatures = function () {
+  return this.features;
+};
+
+module.exports = MultiFeature;
+
+},{"../constants":26,"./feature":28,"./line_string":29,"./point":31,"./polygon":32,"hat":14}],31:[function(require,module,exports){
+'use s
