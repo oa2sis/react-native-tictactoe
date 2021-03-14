@@ -5178,4 +5178,39 @@ MultiFeature.prototype.getFeatures = function () {
 module.exports = MultiFeature;
 
 },{"../constants":26,"./feature":28,"./line_string":29,"./point":31,"./polygon":32,"hat":14}],31:[function(require,module,exports){
-'use s
+'use strict';
+
+var Feature = require('./feature');
+
+var Point = function Point(ctx, geojson) {
+  Feature.call(this, ctx, geojson);
+};
+
+Point.prototype = Object.create(Feature.prototype);
+
+Point.prototype.isValid = function () {
+  return typeof this.coordinates[0] === 'number' && typeof this.coordinates[1] === 'number';
+};
+
+Point.prototype.updateCoordinate = function (pathOrLng, lngOrLat, lat) {
+  if (arguments.length === 3) {
+    this.coordinates = [lngOrLat, lat];
+  } else {
+    this.coordinates = [pathOrLng, lngOrLat];
+  }
+  this.changed();
+};
+
+Point.prototype.getCoordinate = function () {
+  return this.getCoordinates();
+};
+
+module.exports = Point;
+
+},{"./feature":28}],32:[function(require,module,exports){
+'use strict';
+
+var Feature = require('./feature');
+
+var Polygon = function Polygon(ctx, geojson) {
+  
