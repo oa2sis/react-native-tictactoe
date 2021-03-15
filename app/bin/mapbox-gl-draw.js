@@ -5237,4 +5237,39 @@ Polygon.prototype.incomingCoords = function (coords) {
 };
 
 // Does NOT expect valid geoJSON polygon geometry: first and last positions should not be equivalent.
-Polygon.prototype.setCoordinates = function (co
+Polygon.prototype.setCoordinates = function (coords) {
+  this.coordinates = coords;
+  this.changed();
+};
+
+Polygon.prototype.addCoordinate = function (path, lng, lat) {
+  this.changed();
+  var ids = path.split('.').map(function (x) {
+    return parseInt(x, 10);
+  });
+
+  var ring = this.coordinates[ids[0]];
+
+  ring.splice(ids[1], 0, [lng, lat]);
+};
+
+Polygon.prototype.removeCoordinate = function (path) {
+  this.changed();
+  var ids = path.split('.').map(function (x) {
+    return parseInt(x, 10);
+  });
+  var ring = this.coordinates[ids[0]];
+  if (ring) {
+    ring.splice(ids[1], 1);
+    if (ring.length < 3) {
+      this.coordinates.splice(ids[0], 1);
+    }
+  }
+};
+
+Polygon.prototype.getCoordinate = function (path) {
+  var ids = path.split('.').map(function (x) {
+    return parseInt(x, 10);
+  });
+  var ring = this.coordinates[ids[0]];
+  return JSON.parse(JSON.stringify(ring[ids[1]]));
