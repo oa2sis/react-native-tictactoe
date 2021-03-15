@@ -5213,4 +5213,28 @@ module.exports = Point;
 var Feature = require('./feature');
 
 var Polygon = function Polygon(ctx, geojson) {
-  
+  Feature.call(this, ctx, geojson);
+  this.coordinates = this.coordinates.map(function (ring) {
+    return ring.slice(0, -1);
+  });
+};
+
+Polygon.prototype = Object.create(Feature.prototype);
+
+Polygon.prototype.isValid = function () {
+  if (this.coordinates.length === 0) return false;
+  return this.coordinates.every(function (ring) {
+    return ring.length > 2;
+  });
+};
+
+// Expects valid geoJSON polygon geometry: first and last positions must be equivalent.
+Polygon.prototype.incomingCoords = function (coords) {
+  this.coordinates = coords.map(function (ring) {
+    return ring.slice(0, -1);
+  });
+  this.changed();
+};
+
+// Does NOT expect valid geoJSON polygon geometry: first and last positions should not be equivalent.
+Polygon.prototype.setCoordinates = function (co
