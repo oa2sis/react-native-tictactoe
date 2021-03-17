@@ -5273,3 +5273,36 @@ Polygon.prototype.getCoordinate = function (path) {
   });
   var ring = this.coordinates[ids[0]];
   return JSON.parse(JSON.stringify(ring[ids[1]]));
+};
+
+Polygon.prototype.getCoordinates = function () {
+  return this.coordinates.map(function (coords) {
+    return coords.concat([coords[0]]);
+  });
+};
+
+Polygon.prototype.updateCoordinate = function (path, lng, lat) {
+  this.changed();
+  var parts = path.split('.');
+  var ringId = parseInt(parts[0], 10);
+  var coordId = parseInt(parts[1], 10);
+
+  if (this.coordinates[ringId] === undefined) {
+    this.coordinates[ringId] = [];
+  }
+
+  this.coordinates[ringId][coordId] = [lng, lat];
+};
+
+module.exports = Polygon;
+
+},{"./feature":28}],33:[function(require,module,exports){
+'use strict';
+
+var Constants = require('../constants');
+
+module.exports = {
+  isOfMetaType: function isOfMetaType(type) {
+    return function (e) {
+      var featureTarget = e.featureTarget;
+      if (!featureTarget) return false;
