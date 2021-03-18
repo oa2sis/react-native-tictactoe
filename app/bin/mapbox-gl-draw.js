@@ -5323,4 +5323,26 @@ module.exports = {
   isInactiveFeature: function isInactiveFeature(e) {
     if (!e.featureTarget) return false;
     if (!e.featureTarget.properties) return false;
-    return e.featureTarget.properties.active === Co
+    return e.featureTarget.properties.active === Constants.activeStates.INACTIVE && e.featureTarget.properties.meta === Constants.meta.FEATURE;
+  },
+  noTarget: function noTarget(e) {
+    return e.featureTarget === undefined;
+  },
+  isFeature: function isFeature(e) {
+    if (!e.featureTarget) return false;
+    if (!e.featureTarget.properties) return false;
+    return e.featureTarget.properties.meta === Constants.meta.FEATURE;
+  },
+  isVertex: function isVertex(e) {
+    var featureTarget = e.featureTarget;
+    if (!featureTarget) return false;
+    if (!featureTarget.properties) return false;
+    return featureTarget.properties.meta === Constants.meta.VERTEX;
+  },
+  isShiftDown: function isShiftDown(e) {
+    if (!e.originalEvent) return false;
+    return e.originalEvent.shiftKey === true;
+  },
+  isEscapeKey: function isEscapeKey(e) {
+    return e.keyCode === 27;
+  
