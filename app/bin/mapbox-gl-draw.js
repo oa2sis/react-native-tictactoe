@@ -5345,4 +5345,31 @@ module.exports = {
   },
   isEscapeKey: function isEscapeKey(e) {
     return e.keyCode === 27;
-  
+  },
+  isEnterKey: function isEnterKey(e) {
+    return e.keyCode === 13;
+  },
+  true: function _true() {
+    return true;
+  }
+};
+
+},{"../constants":26}],34:[function(require,module,exports){
+'use strict';
+
+var extent = require('geojson-extent');
+var Constants = require('../constants');
+
+var LAT_MIN = Constants.LAT_MIN;
+var LAT_MAX = Constants.LAT_MAX;
+var LAT_RENDERED_MIN = Constants.LAT_RENDERED_MIN;
+var LAT_RENDERED_MAX = Constants.LAT_RENDERED_MAX;
+var LNG_MIN = Constants.LNG_MIN;
+var LNG_MAX = Constants.LNG_MAX;
+
+// Ensure that we do not drag north-south far enough for
+// - any part of any feature to exceed the poles
+// - any feature to be completely lost in the space between the projection's
+//   edge and the poles, such that it couldn't be re-selected and moved back
+
+module.exp
