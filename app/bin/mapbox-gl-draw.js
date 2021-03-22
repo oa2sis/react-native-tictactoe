@@ -5372,4 +5372,24 @@ var LNG_MAX = Constants.LNG_MAX;
 // - any feature to be completely lost in the space between the projection's
 //   edge and the poles, such that it couldn't be re-selected and moved back
 
-module.exp
+module.exports = function (geojsonFeatures, delta) {
+  // "inner edge" = a feature's latitude closest to the equator
+  var northInnerEdge = LAT_MIN;
+  var southInnerEdge = LAT_MAX;
+  // "outer edge" = a feature's latitude furthest from the equator
+  var northOuterEdge = LAT_MIN;
+  var southOuterEdge = LAT_MAX;
+
+  var westEdge = LNG_MAX;
+  var eastEdge = LNG_MIN;
+
+  geojsonFeatures.forEach(function (feature) {
+    var bounds = extent(feature);
+    var featureSouthEdge = bounds[1];
+    var featureNorthEdge = bounds[3];
+    var featureWestEdge = bounds[0];
+    var featureEastEdge = bounds[2];
+    if (featureSouthEdge > northInnerEdge) northInnerEdge = featureSouthEdge;
+    if (featureNorthEdge < southInnerEdge) southInnerEdge = featureNorthEdge;
+    if (featureNorthEdge > northOuterEdge) northOuterEdge = featureNorthEdge;
+    if (featureSouthEdge < southOuterE
