@@ -5392,4 +5392,24 @@ module.exports = function (geojsonFeatures, delta) {
     if (featureSouthEdge > northInnerEdge) northInnerEdge = featureSouthEdge;
     if (featureNorthEdge < southInnerEdge) southInnerEdge = featureNorthEdge;
     if (featureNorthEdge > northOuterEdge) northOuterEdge = featureNorthEdge;
-    if (featureSouthEdge < southOuterE
+    if (featureSouthEdge < southOuterEdge) southOuterEdge = featureSouthEdge;
+    if (featureWestEdge < westEdge) westEdge = featureWestEdge;
+    if (featureEastEdge > eastEdge) eastEdge = featureEastEdge;
+  });
+
+  // These changes are not mutually exclusive: we might hit the inner
+  // edge but also have hit the outer edge and therefore need
+  // another readjustment
+  var constrainedDelta = delta;
+  if (northInnerEdge + constrainedDelta.lat > LAT_RENDERED_MAX) {
+    constrainedDelta.lat = LAT_RENDERED_MAX - northInnerEdge;
+  }
+  if (northOuterEdge + constrainedDelta.lat > LAT_MAX) {
+    constrainedDelta.lat = LAT_MAX - northOuterEdge;
+  }
+  if (southInnerEdge + constrainedDelta.lat < LAT_RENDERED_MIN) {
+    constrainedDelta.lat = LAT_RENDERED_MIN - southInnerEdge;
+  }
+  if (southOuterEdge + constrainedDelta.lat < LAT_MIN) {
+    constrainedDelta.lat = LAT_MIN - southOuterEdge;
+  }
