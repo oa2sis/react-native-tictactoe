@@ -5413,3 +5413,25 @@ module.exports = function (geojsonFeatures, delta) {
   if (southOuterEdge + constrainedDelta.lat < LAT_MIN) {
     constrainedDelta.lat = LAT_MIN - southOuterEdge;
   }
+  if (westEdge + constrainedDelta.lng <= LNG_MIN) {
+    constrainedDelta.lng += Math.ceil(Math.abs(constrainedDelta.lng) / 360) * 360;
+  }
+  if (eastEdge + constrainedDelta.lng >= LNG_MAX) {
+    constrainedDelta.lng -= Math.ceil(Math.abs(constrainedDelta.lng) / 360) * 360;
+  }
+
+  return constrainedDelta;
+};
+
+},{"../constants":26,"geojson-extent":12}],35:[function(require,module,exports){
+'use strict';
+
+var Constants = require('../constants');
+
+module.exports = function (parent, startVertex, endVertex, map) {
+  var startCoord = startVertex.geometry.coordinates;
+  var endCoord = endVertex.geometry.coordinates;
+
+  // If a coordinate exceeds the projection, we can't calculate a midpoint,
+  // so run away
+  if (startCoord[1] > Constants.LAT_RENDERED_MAX || startCoord[1]
