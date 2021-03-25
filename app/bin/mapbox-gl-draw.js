@@ -5462,4 +5462,22 @@ module.exports = function (parent, startVertex, endVertex, map) {
 'use strict';
 
 var createVertex = require('./create_vertex');
-var createMidpoint = require('./cr
+var createMidpoint = require('./create_midpoint');
+var Constants = require('../constants');
+
+function createSupplementaryPoints(geojson) {
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var basePath = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+  var _geojson$geometry = geojson.geometry;
+  var type = _geojson$geometry.type;
+  var coordinates = _geojson$geometry.coordinates;
+
+  var featureId = geojson.properties && geojson.properties.id;
+
+  var supplementaryPoints = [];
+
+  if (type === Constants.geojsonTypes.POINT) {
+    // For points, just create a vertex
+    supplementaryPoints.push(createVertex(featureId, coordinates, basePath, isSelectedPath(basePath)));
+  } else if (type === Constants.geojsonTypes.POLYGON) {
+    // Cycle through a Po
