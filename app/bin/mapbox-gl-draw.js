@@ -5480,4 +5480,23 @@ function createSupplementaryPoints(geojson) {
     // For points, just create a vertex
     supplementaryPoints.push(createVertex(featureId, coordinates, basePath, isSelectedPath(basePath)));
   } else if (type === Constants.geojsonTypes.POLYGON) {
-    // Cycle through a Po
+    // Cycle through a Polygon's rings and
+    // process each line
+    coordinates.forEach(function (line, lineIndex) {
+      processLine(line, basePath !== null ? basePath + '.' + lineIndex : String(lineIndex));
+    });
+  } else if (type === Constants.geojsonTypes.LINE_STRING) {
+    processLine(coordinates, basePath);
+  } else if (type.indexOf(Constants.geojsonTypes.MULTI_PREFIX) === 0) {
+    processMultiGeometry();
+  }
+
+  function processLine(line, lineBasePath) {
+    var firstPointString = '';
+    var lastVertex = null;
+    line.forEach(function (point, pointIndex) {
+      var pointPath = lineBasePath !== undefined && lineBasePath !== null ? lineBasePath + '.' + pointIndex : String(pointIndex);
+      var vertex = createVertex(featureId, point, pointPath, isSelectedPath(pointPath));
+
+      // If we're creating midpoints, check if there was a
+  
