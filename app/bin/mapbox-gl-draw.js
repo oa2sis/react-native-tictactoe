@@ -5499,4 +5499,27 @@ function createSupplementaryPoints(geojson) {
       var vertex = createVertex(featureId, point, pointPath, isSelectedPath(pointPath));
 
       // If we're creating midpoints, check if there was a
-  
+      // vertex before this one. If so, add a midpoint
+      // between that vertex and this one.
+      if (options.midpoints && lastVertex) {
+        var midpoint = createMidpoint(featureId, lastVertex, vertex, options.map);
+        if (midpoint) {
+          supplementaryPoints.push(midpoint);
+        }
+      }
+      lastVertex = vertex;
+
+      // A Polygon line's last point is the same as the first point. If we're on the last
+      // point, we want to draw a midpoint before it but not another vertex on it
+      // (since we already a vertex there, from the first point).
+      var stringifiedPoint = JSON.stringify(point);
+      if (firstPointString !== stringifiedPoint) {
+        supplementaryPoints.push(vertex);
+      }
+      if (pointIndex === 0) {
+        firstPointString = stringifiedPoint;
+      }
+    });
+  }
+
+  fun
