@@ -5550,3 +5550,27 @@ function createSupplementaryPoints(geojson) {
 
 module.exports = createSupplementaryPoints;
 
+},{"../constants":26,"./create_midpoint":35,"./create_vertex":37}],37:[function(require,module,exports){
+'use strict';
+
+var Constants = require('../constants');
+
+/**
+ * Returns GeoJSON for a Point representing the
+ * vertex of another feature.
+ *
+ * @param {string} parentId
+ * @param {Array<number>} coordinates
+ * @param {string} path - Dot-separated numbers indicating exactly
+ *   where the point exists within its parent feature's coordinates.
+ * @param {boolean} selected
+ * @return {GeoJSON} Point
+ */
+module.exports = function (parentId, coordinates, path, selected) {
+  return {
+    type: Constants.geojsonTypes.FEATURE,
+    properties: {
+      meta: Constants.meta.VERTEX,
+      parent: parentId,
+      coord_path: path,
+      active: selected ? Constants.activeStates.ACTIVE : Constants.acti
