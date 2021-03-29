@@ -5522,4 +5522,31 @@ function createSupplementaryPoints(geojson) {
     });
   }
 
-  fun
+  function isSelectedPath(path) {
+    if (!options.selectedPaths) return false;
+    return options.selectedPaths.indexOf(path) !== -1;
+  }
+
+  // Split a multi-geometry into constituent
+  // geometries, and accumulate the supplementary points
+  // for each of those constituents
+  function processMultiGeometry() {
+    var subType = type.replace(Constants.geojsonTypes.MULTI_PREFIX, '');
+    coordinates.forEach(function (subCoordinates, index) {
+      var subFeature = {
+        type: Constants.geojsonTypes.FEATURE,
+        properties: geojson.properties,
+        geometry: {
+          type: subType,
+          coordinates: subCoordinates
+        }
+      };
+      supplementaryPoints = supplementaryPoints.concat(createSupplementaryPoints(subFeature, options, index));
+    });
+  }
+
+  return supplementaryPoints;
+}
+
+module.exports = createSupplementaryPoints;
+
