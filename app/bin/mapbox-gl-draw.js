@@ -5573,4 +5573,40 @@ module.exports = function (parentId, coordinates, path, selected) {
       meta: Constants.meta.VERTEX,
       parent: parentId,
       coord_path: path,
-      active: selected ? Constants.activeStates.ACTIVE : Constants.acti
+      active: selected ? Constants.activeStates.ACTIVE : Constants.activeStates.INACTIVE
+    },
+    geometry: {
+      type: Constants.geojsonTypes.POINT,
+      coordinates: coordinates
+    }
+  };
+};
+
+},{"../constants":26}],38:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+  enable: function enable(ctx) {
+    setTimeout(function () {
+      if (!ctx.map || !ctx.map.doubleClickZoom) return;
+      ctx.map.doubleClickZoom.enable();
+    }, 0);
+  },
+  disable: function disable(ctx) {
+    setTimeout(function () {
+      if (!ctx.map || !ctx.map.doubleClickZoom) return;
+      ctx.map.doubleClickZoom.disable();
+    }, 0);
+  }
+};
+
+},{}],39:[function(require,module,exports){
+"use strict";
+
+module.exports = function (a, b) {
+  var x = a.x - b.x;
+  var y = a.y - b.y;
+  return Math.sqrt(x * x + y * y);
+};
+
+},{}],40:[function(require,module,ex
