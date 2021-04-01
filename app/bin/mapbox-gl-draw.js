@@ -5639,4 +5639,30 @@ function featuresAt(event, bbox, ctx, buffer) {
   var box = event ? mapEventToBoundingBox(event, buffer) : bbox;
 
   var queryParams = {};
-  if (ctx.options.st
+  if (ctx.options.styles) queryParams.layers = ctx.options.styles.map(function (s) {
+    return s.id;
+  });
+
+  var features = ctx.map.queryRenderedFeatures(box, queryParams).filter(function (feature) {
+    return META_TYPES.indexOf(feature.properties.meta) !== -1;
+  });
+
+  var featureIds = new StringSet();
+  var uniqueFeatures = [];
+  features.forEach(function (feature) {
+    var featureId = feature.properties.id;
+    if (featureIds.has(featureId)) return;
+    featureIds.add(featureId);
+    uniqueFeatures.push(feature);
+  });
+
+  return sortFeatures(uniqueFeatures);
+}
+
+},{"../constants":26,"./map_event_to_bounding_box":45,"./sort_features":49,"./string_set":50}],41:[function(require,module,exports){
+'use strict';
+
+var featuresAt = require('./features_at');
+var Constants = require('../constants');
+
+module.exports = function g
