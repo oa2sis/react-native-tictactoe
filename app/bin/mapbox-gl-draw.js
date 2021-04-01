@@ -5609,4 +5609,34 @@ module.exports = function (a, b) {
   return Math.sqrt(x * x + y * y);
 };
 
-},{}],40:[function(require,module,ex
+},{}],40:[function(require,module,exports){
+'use strict';
+
+var sortFeatures = require('./sort_features');
+var mapEventToBoundingBox = require('./map_event_to_bounding_box');
+var Constants = require('../constants');
+var StringSet = require('./string_set');
+
+var META_TYPES = [Constants.meta.FEATURE, Constants.meta.MIDPOINT, Constants.meta.VERTEX];
+
+// Requires either event or bbox
+module.exports = {
+  click: featuresAtClick,
+  touch: featuresAtTouch
+};
+
+function featuresAtClick(event, bbox, ctx) {
+  return featuresAt(event, bbox, ctx, ctx.options.clickBuffer);
+}
+
+function featuresAtTouch(event, bbox, ctx) {
+  return featuresAt(event, bbox, ctx, ctx.options.touchBuffer);
+}
+
+function featuresAt(event, bbox, ctx, buffer) {
+  if (ctx.map === null) return [];
+
+  var box = event ? mapEventToBoundingBox(event, buffer) : bbox;
+
+  var queryParams = {};
+  if (ctx.options.st
