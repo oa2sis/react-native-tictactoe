@@ -5665,4 +5665,30 @@ function featuresAt(event, bbox, ctx, buffer) {
 var featuresAt = require('./features_at');
 var Constants = require('../constants');
 
-module.exports = function g
+module.exports = function getFeatureAtAndSetCursors(event, ctx) {
+  var features = featuresAt.click(event, null, ctx);
+  var classes = { mouse: Constants.cursors.NONE };
+
+  if (features[0]) {
+    classes.mouse = features[0].properties.active === Constants.activeStates.ACTIVE ? Constants.cursors.MOVE : Constants.cursors.POINTER;
+    classes.feature = features[0].properties.meta;
+  }
+
+  if (ctx.events.currentModeName().indexOf('draw') !== -1) {
+    classes.mouse = Constants.cursors.ADD;
+  }
+
+  ctx.ui.queueMapClasses(classes);
+  ctx.ui.updateMapClasses();
+
+  return features[0];
+};
+
+},{"../constants":26,"./features_at":40}],42:[function(require,module,exports){
+'use strict';
+
+var euclideanDistance = require('./euclidean_distance');
+
+var FINE_TOLERANCE = 4;
+var GROSS_TOLERANCE = 12;
+var INTERVAL = 500;
