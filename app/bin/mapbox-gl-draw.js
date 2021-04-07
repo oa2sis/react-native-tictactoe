@@ -5711,4 +5711,28 @@ module.exports = function isClick(start, end) {
 "use strict";
 
 function isEventAtCoordinates(event, coordinates) {
-  if (!ev
+  if (!event.lngLat) return false;
+  return event.lngLat.lng === coordinates[0] && event.lngLat.lat === coordinates[1];
+}
+
+module.exports = isEventAtCoordinates;
+
+},{}],44:[function(require,module,exports){
+'use strict';
+
+var euclideanDistance = require('./euclidean_distance');
+
+var TOLERANCE = 25;
+var INTERVAL = 250;
+
+module.exports = function isTap(start, end) {
+  var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+  var tolerance = options.tolerance != null ? options.tolerance : TOLERANCE;
+  var interval = options.interval != null ? options.interval : INTERVAL;
+
+  start.point = start.point || end.point;
+  start.time = start.time || end.time;
+  var moveDistance = euclideanDistance(start.point, end.point);
+
+  return moveDistance < to
