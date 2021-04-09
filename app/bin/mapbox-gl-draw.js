@@ -5766,4 +5766,36 @@ var ModeHandler = function ModeHandler(mode, DrawContext) {
     mousemove: [],
     mousedown: [],
     mouseup: [],
-    mou
+    mouseout: [],
+    keydown: [],
+    keyup: [],
+    touchstart: [],
+    touchmove: [],
+    touchend: [],
+    tap: []
+  };
+
+  var ctx = {
+    on: function on(event, selector, fn) {
+      if (handlers[event] === undefined) {
+        throw new Error('Invalid event type: ' + event);
+      }
+      handlers[event].push({
+        selector: selector,
+        fn: fn
+      });
+    },
+    render: function render(id) {
+      DrawContext.store.featureChanged(id);
+    }
+  };
+
+  var delegate = function delegate(eventName, event) {
+    var handles = handlers[eventName];
+    var iHandle = handles.length;
+    while (iHandle--) {
+      var handle = handles[iHandle];
+      if (handle.selector(event)) {
+        handle.fn.call(ctx, event);
+        DrawContext.store.render();
+        DrawContext.ui
