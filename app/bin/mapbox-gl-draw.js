@@ -5798,4 +5798,40 @@ var ModeHandler = function ModeHandler(mode, DrawContext) {
       if (handle.selector(event)) {
         handle.fn.call(ctx, event);
         DrawContext.store.render();
-        DrawContext.ui
+        DrawContext.ui.updateMapClasses();
+
+        // ensure an event is only handled once
+        // we do this to let modes have multiple overlapping selectors
+        // and relay on order of oppertations to filter
+        break;
+      }
+    }
+  };
+
+  mode.start.call(ctx);
+
+  return {
+    render: mode.render,
+    stop: function stop() {
+      if (mode.stop) mode.stop();
+    },
+    trash: function trash() {
+      if (mode.trash) {
+        mode.trash();
+        DrawContext.store.render();
+      }
+    },
+    combineFeatures: function combineFeatures() {
+      if (mode.combineFeatures) {
+        mode.combineFeatures();
+      }
+    },
+    uncombineFeatures: function uncombineFeatures() {
+      if (mode.uncombineFeatures) {
+        mode.uncombineFeatures();
+      }
+    },
+    drag: function drag(event) {
+      delegate('drag', event);
+    },
+ 
