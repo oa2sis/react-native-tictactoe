@@ -5834,4 +5834,35 @@ var ModeHandler = function ModeHandler(mode, DrawContext) {
     drag: function drag(event) {
       delegate('drag', event);
     },
- 
+    click: function click(event) {
+      delegate('click', event);
+    },
+    mousemove: function mousemove(event) {
+      delegate('mousemove', event);
+    },
+    mousedown: function mousedown(event) {
+      delegate('mousedown', event);
+    },
+    mouseup: function mouseup(event) {
+      delegate('mouseup', event);
+    },
+    mouseout: function mouseout(event) {
+      delegate('mouseout', event);
+    },
+    keydown: function keydown(event) {
+      delegate('keydown', event);
+    },
+    keyup: function keyup(event) {
+      delegate('keyup', event);
+    },
+    touchstart: function touchstart(event) {
+      delegate('touchstart', event);
+    },
+    touchmove: function touchmove(event) {
+      delegate('touchmove', event);
+    },
+    touchend: function touchend(event) {
+      delegate('touchend', event);
+    },
+    tap: function tap(event) {
+   
