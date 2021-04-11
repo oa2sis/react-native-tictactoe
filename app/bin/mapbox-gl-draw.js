@@ -5865,4 +5865,35 @@ var ModeHandler = function ModeHandler(mode, DrawContext) {
       delegate('touchend', event);
     },
     tap: function tap(event) {
-   
+      delegate('tap', event);
+    }
+  };
+};
+
+module.exports = ModeHandler;
+
+},{}],47:[function(require,module,exports){
+'use strict';
+
+var Point = require('point-geometry');
+
+/**
+ * Returns a Point representing a mouse event's position
+ * relative to a containing element.
+ *
+ * @param {MouseEvent} mouseEvent
+ * @param {Node} container
+ * @returns {Point}
+ */
+function mouseEventPoint(mouseEvent, container) {
+  var rect = container.getBoundingClientRect();
+  return new Point(mouseEvent.clientX - rect.left - container.clientLeft, mouseEvent.clientY - rect.top - container.clientTop);
+}
+
+module.exports = mouseEventPoint;
+
+},{"point-geometry":20}],48:[function(require,module,exports){
+'use strict';
+
+var constrainFeatureMovement = require('./constrain_feature_movement');
+var Constants = require('../constants');
