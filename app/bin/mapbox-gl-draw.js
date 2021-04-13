@@ -5925,4 +5925,21 @@ module.exports = function (features, delta) {
     };
 
     var nextCoordinates = void 0;
-    if (fea
+    if (feature.type === Constants.geojsonTypes.POINT) {
+      nextCoordinates = moveCoordinate(currentCoordinates);
+    } else if (feature.type === Constants.geojsonTypes.LINE_STRING || feature.type === Constants.geojsonTypes.MULTI_POINT) {
+      nextCoordinates = currentCoordinates.map(moveCoordinate);
+    } else if (feature.type === Constants.geojsonTypes.POLYGON || feature.type === Constants.geojsonTypes.MULTI_LINE_STRING) {
+      nextCoordinates = currentCoordinates.map(moveRing);
+    } else if (feature.type === Constants.geojsonTypes.MULTI_POLYGON) {
+      nextCoordinates = currentCoordinates.map(moveMultiPolygon);
+    }
+
+    feature.incomingCoords(nextCoordinates);
+  });
+};
+
+},{"../constants":26,"./constrain_feature_movement":34}],49:[function(require,module,exports){
+'use strict';
+
+var area = require('@mapbox/geo
