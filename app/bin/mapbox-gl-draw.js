@@ -5978,4 +5978,32 @@ function sortFeatures(features) {
   });
 }
 
-module
+module.exports = sortFeatures;
+
+},{"../constants":26,"@mapbox/geojson-area":2}],50:[function(require,module,exports){
+"use strict";
+
+function StringSet(items) {
+  this._items = {};
+  this._length = items ? items.length : 0;
+  if (!items) return;
+  for (var i = 0, l = items.length; i < l; i++) {
+    if (items[i] === undefined) continue;
+    this._items[items[i]] = i;
+  }
+}
+
+StringSet.prototype.add = function (x) {
+  this._length = this._items[x] ? this._length : this._length + 1;
+  this._items[x] = this._items[x] ? this._items[x] : this._length;
+  return this;
+};
+
+StringSet.prototype.delete = function (x) {
+  this._length = this._items[x] ? this._length - 1 : this._length;
+  delete this._items[x];
+  return this;
+};
+
+StringSet.prototype.has = function (x) {
+  return this._items[x] !== und
