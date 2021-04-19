@@ -6006,4 +6006,42 @@ StringSet.prototype.delete = function (x) {
 };
 
 StringSet.prototype.has = function (x) {
-  return this._items[x] !== und
+  return this._items[x] !== undefined;
+};
+
+StringSet.prototype.values = function () {
+  var _this = this;
+
+  var orderedKeys = Object.keys(this._items).sort(function (a, b) {
+    return _this._items[a] - _this._items[b];
+  });
+  return orderedKeys;
+};
+
+StringSet.prototype.clear = function () {
+  this._length = 0;
+  this._items = {};
+  return this;
+};
+
+module.exports = StringSet;
+
+},{}],51:[function(require,module,exports){
+"use strict";
+
+module.exports = function (a, b) {
+  if (a.length !== b.length) return false;
+  return JSON.stringify(a.map(function (id) {
+    return id;
+  }).sort()) === JSON.stringify(b.map(function (id) {
+    return id;
+  }).sort());
+};
+
+},{}],52:[function(require,module,exports){
+'use strict';
+
+module.exports = [{
+  'id': 'gl-draw-polygon-fill-inactive',
+  'type': 'fill',
+  'filter': ['all', ['==', 'active',
