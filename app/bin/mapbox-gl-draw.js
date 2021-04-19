@@ -6044,4 +6044,32 @@ module.exports = function (a, b) {
 module.exports = [{
   'id': 'gl-draw-polygon-fill-inactive',
   'type': 'fill',
-  'filter': ['all', ['==', 'active',
+  'filter': ['all', ['==', 'active', 'false'], ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+  'paint': {
+    'fill-color': '#3bb2d0',
+    'fill-outline-color': '#3bb2d0',
+    'fill-opacity': 0.1
+  }
+}, {
+  'id': 'gl-draw-polygon-fill-active',
+  'type': 'fill',
+  'filter': ['all', ['==', 'active', 'true'], ['==', '$type', 'Polygon']],
+  'paint': {
+    'fill-color': '#fbb03b',
+    'fill-outline-color': '#fbb03b',
+    'fill-opacity': 0.1
+  }
+}, {
+  'id': 'gl-draw-polygon-midpoint',
+  'type': 'circle',
+  'filter': ['all', ['==', '$type', 'Point'], ['==', 'meta', 'midpoint']],
+  'paint': {
+    'circle-radius': 3,
+    'circle-color': '#fbb03b'
+  }
+}, {
+  'id': 'gl-draw-polygon-stroke-inactive',
+  'type': 'line',
+  'filter': ['all', ['==', 'active', 'false'], ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+  'layout': {
+    
