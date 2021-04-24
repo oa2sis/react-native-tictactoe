@@ -6108,4 +6108,32 @@ module.exports = [{
   'id': 'gl-draw-line-active',
   'type': 'line',
   'filter': ['all', ['==', '$type', 'LineString'], ['==', 'active', 'true']],
-  '
+  'layout': {
+    'line-cap': 'round',
+    'line-join': 'round'
+  },
+  'paint': {
+    'line-color': '#fbb03b',
+    'line-dasharray': [0.2, 2],
+    'line-width': 2
+  }
+}, {
+  'id': 'gl-draw-polygon-and-line-vertex-stroke-inactive',
+  'type': 'circle',
+  'filter': ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point'], ['!=', 'mode', 'static']],
+  'paint': {
+    'circle-radius': 5,
+    'circle-color': '#fff'
+  }
+}, {
+  'id': 'gl-draw-polygon-and-line-vertex-inactive',
+  'type': 'circle',
+  'filter': ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point'], ['!=', 'mode', 'static']],
+  'paint': {
+    'circle-radius': 3,
+    'circle-color': '#fbb03b'
+  }
+}, {
+  'id': 'gl-draw-point-point-stroke-inactive',
+  'type': 'circle',
+  'filter': ['all', ['==', 'active', 'false'], ['==', '$type', 'Point'], ['==', 'm
