@@ -6136,4 +6136,31 @@ module.exports = [{
 }, {
   'id': 'gl-draw-point-point-stroke-inactive',
   'type': 'circle',
-  'filter': ['all', ['==', 'active', 'false'], ['==', '$type', 'Point'], ['==', 'm
+  'filter': ['all', ['==', 'active', 'false'], ['==', '$type', 'Point'], ['==', 'meta', 'feature'], ['!=', 'mode', 'static']],
+  'paint': {
+    'circle-radius': 5,
+    'circle-opacity': 1,
+    'circle-color': '#fff'
+  }
+}, {
+  'id': 'gl-draw-point-inactive',
+  'type': 'circle',
+  'filter': ['all', ['==', 'active', 'false'], ['==', '$type', 'Point'], ['==', 'meta', 'feature'], ['!=', 'mode', 'static']],
+  'paint': {
+    'circle-radius': 3,
+    'circle-color': '#3bb2d0'
+  }
+}, {
+  'id': 'gl-draw-point-stroke-active',
+  'type': 'circle',
+  'filter': ['all', ['==', '$type', 'Point'], ['==', 'active', 'true'], ['!=', 'meta', 'midpoint']],
+  'paint': {
+    'circle-radius': 7,
+    'circle-color': '#fff'
+  }
+}, {
+  'id': 'gl-draw-point-active',
+  'type': 'circle',
+  'filter': ['all', ['==', '$type', 'Point'], ['!=', 'meta', 'midpoint'], ['==', 'active', 'true']],
+  'paint': {
+    '
