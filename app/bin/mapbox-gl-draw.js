@@ -6163,4 +6163,38 @@ module.exports = [{
   'type': 'circle',
   'filter': ['all', ['==', '$type', 'Point'], ['!=', 'meta', 'midpoint'], ['==', 'active', 'true']],
   'paint': {
-    '
+    'circle-radius': 5,
+    'circle-color': '#fbb03b'
+  }
+}, {
+  'id': 'gl-draw-polygon-fill-static',
+  'type': 'fill',
+  'filter': ['all', ['==', 'mode', 'static'], ['==', '$type', 'Polygon']],
+  'paint': {
+    'fill-color': '#404040',
+    'fill-outline-color': '#404040',
+    'fill-opacity': 0.1
+  }
+}, {
+  'id': 'gl-draw-polygon-stroke-static',
+  'type': 'line',
+  'filter': ['all', ['==', 'mode', 'static'], ['==', '$type', 'Polygon']],
+  'layout': {
+    'line-cap': 'round',
+    'line-join': 'round'
+  },
+  'paint': {
+    'line-color': '#404040',
+    'line-width': 2
+  }
+}, {
+  'id': 'gl-draw-line-static',
+  'type': 'line',
+  'filter': ['all', ['==', 'mode', 'static'], ['==', '$type', 'LineString']],
+  'layout': {
+    'line-cap': 'round',
+    'line-join': 'round'
+  },
+  'paint': {
+    'line-color': '#404040',
+    'line-widt
