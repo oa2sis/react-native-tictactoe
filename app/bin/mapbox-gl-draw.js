@@ -6197,4 +6197,49 @@ module.exports = [{
   },
   'paint': {
     'line-color': '#404040',
-    'line-widt
+    'line-width': 2
+  }
+}, {
+  'id': 'gl-draw-point-static',
+  'type': 'circle',
+  'filter': ['all', ['==', 'mode', 'static'], ['==', '$type', 'Point']],
+  'paint': {
+    'circle-radius': 5,
+    'circle-color': '#404040'
+  }
+}];
+
+},{}],53:[function(require,module,exports){
+"use strict";
+
+function throttle(fn, time, context) {
+  var lock = void 0,
+      args = void 0;
+
+  function later() {
+    // reset lock and call if queued
+    lock = false;
+    if (args) {
+      wrapperFn.apply(context, args);
+      args = false;
+    }
+  }
+
+  function wrapperFn() {
+    if (lock) {
+      // called too soon, queue to call later
+      args = arguments;
+    } else {
+      // lock until later then call
+      lock = true;
+      fn.apply(context, arguments);
+      setTimeout(later, time);
+    }
+  }
+
+  return wrapperFn;
+}
+
+module.exports = throttle;
+
+},{}],54:
