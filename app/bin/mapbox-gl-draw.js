@@ -6242,4 +6242,34 @@ function throttle(fn, time, context) {
 
 module.exports = throttle;
 
-},{}],54:
+},{}],54:[function(require,module,exports){
+"use strict";
+
+/**
+ * Derive a dense array (no `undefined`s) from a single value or array.
+ *
+ * @param {any} x
+ * @return {Array<any>}
+ */
+function toDenseArray(x) {
+  return [].concat(x).filter(function (y) {
+    return y !== undefined;
+  });
+}
+
+module.exports = toDenseArray;
+
+},{}],55:[function(require,module,exports){
+'use strict';
+
+var _require = require('../lib/common_selectors');
+
+var noTarget = _require.noTarget;
+var isOfMetaType = _require.isOfMetaType;
+var isInactiveFeature = _require.isInactiveFeature;
+var isShiftDown = _require.isShiftDown;
+
+var createSupplementaryPoints = require('../lib/create_supplementary_points');
+var constrainFeatureMovement = require('../lib/constrain_feature_movement');
+var doubleClickZoom = require('../lib/double_click_zoom');
+var Cons
