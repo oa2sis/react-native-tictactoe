@@ -6272,4 +6272,28 @@ var isShiftDown = _require.isShiftDown;
 var createSupplementaryPoints = require('../lib/create_supplementary_points');
 var constrainFeatureMovement = require('../lib/constrain_feature_movement');
 var doubleClickZoom = require('../lib/double_click_zoom');
-var Cons
+var Constants = require('../constants');
+var CommonSelectors = require('../lib/common_selectors');
+var moveFeatures = require('../lib/move_features');
+
+var isVertex = isOfMetaType(Constants.meta.VERTEX);
+var isMidpoint = isOfMetaType(Constants.meta.MIDPOINT);
+
+module.exports = function (ctx, opts) {
+  var featureId = opts.featureId;
+  var feature = ctx.store.get(featureId);
+
+  if (!feature) {
+    throw new Error('You must provide a featureId to enter direct_select mode');
+  }
+
+  if (feature.type === Constants.geojsonTypes.POINT) {
+    throw new TypeError('direct_select mode doesn\'t handle point features');
+  }
+
+  var dragMoveLocation = opts.startPos || null;
+  var dragMoving = false;
+  var canDragMove = false;
+
+  var selectedCoordPaths = opts.coordPath ? [opts.coordPath] : [];
+  var selectedC
