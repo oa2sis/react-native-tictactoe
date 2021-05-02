@@ -6296,4 +6296,32 @@ module.exports = function (ctx, opts) {
   var canDragMove = false;
 
   var selectedCoordPaths = opts.coordPath ? [opts.coordPath] : [];
-  var selectedC
+  var selectedCoordinates = pathsToCoordinates(featureId, selectedCoordPaths);
+  ctx.store.setSelectedCoordinates(selectedCoordinates);
+
+  var fireUpdate = function fireUpdate() {
+    ctx.map.fire(Constants.events.UPDATE, {
+      action: Constants.updateActions.CHANGE_COORDINATES,
+      features: ctx.store.getSelected().map(function (f) {
+        return f.toGeoJSON();
+      })
+    });
+  };
+
+  var fireActionable = function fireActionable() {
+    return ctx.events.actionable({
+      combineFeatures: false,
+      uncombineFeatures: false,
+      trash: selectedCoordPaths.length > 0
+    });
+  };
+
+  var startDragging = function startDragging(e) {
+    ctx.map.dragPan.disable();
+    canDragMove = true;
+    dragMoveLocation = e.lngLat;
+  };
+
+  var stopDragging = function stopDragging() {
+    ctx.map.dragPan.enable();
+    dragMovi
