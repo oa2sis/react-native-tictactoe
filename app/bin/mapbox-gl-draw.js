@@ -6324,4 +6324,27 @@ module.exports = function (ctx, opts) {
 
   var stopDragging = function stopDragging() {
     ctx.map.dragPan.enable();
-    dragMovi
+    dragMoving = false;
+    canDragMove = false;
+    dragMoveLocation = null;
+  };
+
+  var onVertex = function onVertex(e) {
+    startDragging(e);
+    var about = e.featureTarget.properties;
+    var selectedIndex = selectedCoordPaths.indexOf(about.coord_path);
+    if (!isShiftDown(e) && selectedIndex === -1) {
+      selectedCoordPaths = [about.coord_path];
+    } else if (isShiftDown(e) && selectedIndex === -1) {
+      selectedCoordPaths.push(about.coord_path);
+    }
+    var selectedCoordinates = pathsToCoordinates(featureId, selectedCoordPaths);
+    ctx.store.setSelectedCoordinates(selectedCoordinates);
+    feature.changed();
+  };
+
+  var onMidpoint = function onMidpoint(e) {
+    startDragging(e);
+    var about = e.featureTarget.properties;
+    feature.addCoordinate(about.coord_path, about.lng, about.lat);
+    fireUpdate(
