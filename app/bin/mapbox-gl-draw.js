@@ -6347,4 +6347,30 @@ module.exports = function (ctx, opts) {
     startDragging(e);
     var about = e.featureTarget.properties;
     feature.addCoordinate(about.coord_path, about.lng, about.lat);
-    fireUpdate(
+    fireUpdate();
+    selectedCoordPaths = [about.coord_path];
+  };
+
+  function pathsToCoordinates(featureId, paths) {
+    return paths.map(function (coord_path) {
+      return { feature_id: featureId, coord_path: coord_path, coordinates: feature.getCoordinate(coord_path) };
+    });
+  }
+
+  var onFeature = function onFeature(e) {
+    if (selectedCoordPaths.length === 0) startDragging(e);else stopDragging();
+  };
+
+  var dragFeature = function dragFeature(e, delta) {
+    moveFeatures(ctx.store.getSelected(), delta);
+    dragMoveLocation = e.lngLat;
+  };
+
+  var dragVertex = function dragVertex(e, delta) {
+    var selectedCoords = selectedCoordPaths.map(function (coord_path) {
+      return feature.getCoordinate(coord_path);
+    });
+    var selectedCoordPoints = selectedCoords.map(function (coords) {
+      return {
+        type: Constants.geojsonTypes.FEATURE,
+     
