@@ -6397,4 +6397,19 @@ module.exports = function (ctx, opts) {
       this.on('mousemove', CommonSelectors.true, function (e) {
         var isFeature = CommonSelectors.isActiveFeature(e);
         var onVertex = isVertex(e);
-    
+        var noCoords = selectedCoordPaths.length === 0;
+        if (isFeature && noCoords) ctx.ui.queueMapClasses({ mouse: Constants.cursors.MOVE });else if (onVertex && !noCoords) ctx.ui.queueMapClasses({ mouse: Constants.cursors.MOVE });else ctx.ui.queueMapClasses({ mouse: Constants.cursors.NONE });
+        stopDragging(e);
+      });
+
+      // As soon as you mouse leaves the canvas, update the feature
+      this.on('mouseout', function () {
+        return dragMoving;
+      }, fireUpdate);
+
+      this.on('mousedown', isVertex, onVertex);
+      this.on('touchstart', isVertex, onVertex);
+      this.on('mousedown', CommonSelectors.isActiveFeature, onFeature);
+      this.on('touchstart', CommonSelectors.isActiveFeature, onFeature);
+      this.on('mousedown', isMidpoint, onMidpoint);
+      this.on('
