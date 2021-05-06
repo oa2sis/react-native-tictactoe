@@ -6373,4 +6373,28 @@ module.exports = function (ctx, opts) {
     var selectedCoordPoints = selectedCoords.map(function (coords) {
       return {
         type: Constants.geojsonTypes.FEATURE,
-     
+        properties: {},
+        geometry: {
+          type: Constants.geojsonTypes.POINT,
+          coordinates: coords
+        }
+      };
+    });
+
+    var constrainedDelta = constrainFeatureMovement(selectedCoordPoints, delta);
+    for (var i = 0; i < selectedCoords.length; i++) {
+      var coord = selectedCoords[i];
+      feature.updateCoordinate(selectedCoordPaths[i], coord[0] + constrainedDelta.lng, coord[1] + constrainedDelta.lat);
+    }
+  };
+
+  return {
+    start: function start() {
+      ctx.store.setSelected(featureId);
+      doubleClickZoom.disable(ctx);
+
+      // On mousemove that is not a drag, stop vertex movement.
+      this.on('mousemove', CommonSelectors.true, function (e) {
+        var isFeature = CommonSelectors.isActiveFeature(e);
+        var onVertex = isVertex(e);
+    
