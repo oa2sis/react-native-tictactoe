@@ -6436,4 +6436,27 @@ module.exports = function (ctx, opts) {
       });
       this.on('touchend', CommonSelectors.true, function () {
         if (dragMoving) {
-          fireUpdat
+          fireUpdate();
+        }
+        stopDragging();
+      });
+      this.on('click', noTarget, clickNoTarget);
+      this.on('tap', noTarget, clickNoTarget);
+      this.on('click', isInactiveFeature, clickInactive);
+      this.on('tap', isInactiveFeature, clickInactive);
+      this.on('click', CommonSelectors.isActiveFeature, clickActiveFeature);
+      this.on('tap', CommonSelectors.isActiveFeature, clickActiveFeature);
+
+      function clickNoTarget() {
+        ctx.events.changeMode(Constants.modes.SIMPLE_SELECT);
+      }
+      function clickInactive() {
+        ctx.events.changeMode(Constants.modes.SIMPLE_SELECT);
+      }
+      function clickActiveFeature() {
+        selectedCoordPaths = [];
+        ctx.store.clearSelectedCoordinates();
+        feature.changed();
+      }
+    },
+ 
