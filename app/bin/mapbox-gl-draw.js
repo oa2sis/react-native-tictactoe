@@ -6412,4 +6412,28 @@ module.exports = function (ctx, opts) {
       this.on('mousedown', CommonSelectors.isActiveFeature, onFeature);
       this.on('touchstart', CommonSelectors.isActiveFeature, onFeature);
       this.on('mousedown', isMidpoint, onMidpoint);
-      this.on('
+      this.on('touchstart', isMidpoint, onMidpoint);
+      this.on('drag', function () {
+        return canDragMove;
+      }, function (e) {
+        dragMoving = true;
+        e.originalEvent.stopPropagation();
+
+        var delta = {
+          lng: e.lngLat.lng - dragMoveLocation.lng,
+          lat: e.lngLat.lat - dragMoveLocation.lat
+        };
+        if (selectedCoordPaths.length > 0) dragVertex(e, delta);else dragFeature(e, delta);
+
+        dragMoveLocation = e.lngLat;
+      });
+      this.on('click', CommonSelectors.true, stopDragging);
+      this.on('mouseup', CommonSelectors.true, function () {
+        if (dragMoving) {
+          fireUpdate();
+        }
+        stopDragging();
+      });
+      this.on('touchend', CommonSelectors.true, function () {
+        if (dragMoving) {
+          fireUpdat
