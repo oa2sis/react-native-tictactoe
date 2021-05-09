@@ -6459,4 +6459,28 @@ module.exports = function (ctx, opts) {
         feature.changed();
       }
     },
- 
+    stop: function stop() {
+      doubleClickZoom.enable(ctx);
+      ctx.store.clearSelectedCoordinates();
+    },
+    render: function render(geojson, push) {
+      if (featureId === geojson.properties.id) {
+        geojson.properties.active = Constants.activeStates.ACTIVE;
+        push(geojson);
+        createSupplementaryPoints(geojson, {
+          map: ctx.map,
+          midpoints: true,
+          selectedPaths: selectedCoordPaths
+        }).forEach(push);
+      } else {
+        geojson.properties.active = Constants.activeStates.INACTIVE;
+        push(geojson);
+      }
+      fireActionable();
+    },
+    trash: function trash() {
+      selectedCoordPaths.sort().reverse().forEach(function (id) {
+        return feature.removeCoordinate(id);
+      });
+      ctx.map.fire(Constants.events.UPDATE, {
+    
