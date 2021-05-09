@@ -6483,4 +6483,27 @@ module.exports = function (ctx, opts) {
         return feature.removeCoordinate(id);
       });
       ctx.map.fire(Constants.events.UPDATE, {
-    
+        action: Constants.updateActions.CHANGE_COORDINATES,
+        features: ctx.store.getSelected().map(function (f) {
+          return f.toGeoJSON();
+        })
+      });
+      if (selectedCoordPaths.length === 0) {
+        ctx.store.delete([featureId]);
+      }
+      selectedCoordPaths = [];
+      ctx.store.clearSelectedCoordinates();
+
+      fireActionable();
+      if (feature.isValid() === false) {
+        ctx.store.delete([featureId]);
+        ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, {});
+      }
+    }
+  };
+};
+
+},{"../constants":26,"../lib/common_selectors":33,"../lib/constrain_feature_movement":34,"../lib/create_supplementary_points":36,"../lib/double_click_zoom":38,"../lib/move_features":48}],56:[function(require,module,exports){
+'use strict';
+
+var CommonSelec
