@@ -6506,4 +6506,29 @@ module.exports = function (ctx, opts) {
 },{"../constants":26,"../lib/common_selectors":33,"../lib/constrain_feature_movement":34,"../lib/create_supplementary_points":36,"../lib/double_click_zoom":38,"../lib/move_features":48}],56:[function(require,module,exports){
 'use strict';
 
-var CommonSelec
+var CommonSelectors = require('../lib/common_selectors');
+var LineString = require('../feature_types/line_string');
+var isEventAtCoordinates = require('../lib/is_event_at_coordinates');
+var doubleClickZoom = require('../lib/double_click_zoom');
+var Constants = require('../constants');
+var createVertex = require('../lib/create_vertex');
+
+module.exports = function (ctx, opts) {
+  var geometry = opts.feature ? opts.feature.geometry : {
+    type: Constants.geojsonTypes.LINE_STRING,
+    coordinates: []
+  };
+
+  var line = new LineString(ctx, {
+    type: Constants.geojsonTypes.FEATURE,
+    properties: {},
+    geometry: geometry
+  });
+  var currentVertexPosition = opts.feature ? opts.feature.geometry.coordinates.length - 1 : 0;
+
+  if (ctx._test) ctx._test.line = line;
+
+  ctx.store.add(line);
+
+  return {
+    start: function start() {
