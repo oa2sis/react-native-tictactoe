@@ -6549,4 +6549,22 @@ module.exports = function (ctx, opts) {
       this.on('tap', CommonSelectors.isVertex, clickOnVertex);
 
       function clickAnywhere(e) {
-        if (currentVertexPosition > 0 && isEventAtCoordinates(e, line.
+        if (currentVertexPosition > 0 && isEventAtCoordinates(e, line.coordinates[currentVertexPosition - 1])) {
+          return ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [line.id] });
+        }
+        ctx.ui.queueMapClasses({ mouse: Constants.cursors.ADD });
+        line.updateCoordinate(currentVertexPosition, e.lngLat.lng, e.lngLat.lat);
+        currentVertexPosition++;
+      }
+
+      function clickOnVertex() {
+        return ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [line.id] });
+      }
+
+      this.on('keyup', CommonSelectors.isEscapeKey, function () {
+        ctx.store.delete([line.id], { silent: true });
+        ctx.events.changeMode(Constants.modes.SIMPLE_SELECT);
+      });
+      this.on('keyup', CommonSelectors.isEnterKey, function () {
+        ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [line.id] });
+ 
