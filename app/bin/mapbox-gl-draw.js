@@ -6595,4 +6595,21 @@ module.exports = function (ctx, opts) {
     },
     render: function render(geojson, callback) {
       var isActiveLine = geojson.properties.id === line.id;
-      g
+      geojson.properties.active = isActiveLine ? Constants.activeStates.ACTIVE : Constants.activeStates.INACTIVE;
+      if (!isActiveLine) return callback(geojson);
+
+      // Only render the line if it has at least one real coordinate
+      if (geojson.geometry.coordinates.length < 2) return;
+      geojson.properties.meta = Constants.meta.FEATURE;
+
+      // // if we're rendering it; mark it as selected
+      // ctx.store.setSelected(line.id);
+      if (geojson.geometry.coordinates.length >= 3) {
+        callback(createVertex(line.id, geojson.geometry.coordinates[geojson.geometry.coordinates.length - 2], '' + (geojson.geometry.coordinates.length - 2), false));
+      }
+
+      callback(geojson);
+    },
+    trash: function trash() {
+      ctx.store.delete([line.id], { silent: true });
+      ctx.events.changeMode(Constants.mode
