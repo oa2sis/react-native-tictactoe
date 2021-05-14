@@ -6612,4 +6612,32 @@ module.exports = function (ctx, opts) {
     },
     trash: function trash() {
       ctx.store.delete([line.id], { silent: true });
-      ctx.events.changeMode(Constants.mode
+      ctx.events.changeMode(Constants.modes.SIMPLE_SELECT);
+    }
+  };
+};
+
+},{"../constants":26,"../feature_types/line_string":29,"../lib/common_selectors":33,"../lib/create_vertex":37,"../lib/double_click_zoom":38,"../lib/is_event_at_coordinates":43}],57:[function(require,module,exports){
+'use strict';
+
+var CommonSelectors = require('../lib/common_selectors');
+var Point = require('../feature_types/point');
+var Constants = require('../constants');
+
+module.exports = function (ctx) {
+
+  var point = new Point(ctx, {
+    type: Constants.geojsonTypes.FEATURE,
+    properties: {},
+    geometry: {
+      type: Constants.geojsonTypes.POINT,
+      coordinates: []
+    }
+  });
+
+  if (ctx._test) ctx._test.point = point;
+
+  ctx.store.add(point);
+
+  function stopDrawingAndRemove() {
+    ctx.events.changeMode(Constants.modes.S
