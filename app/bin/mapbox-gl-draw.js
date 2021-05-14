@@ -6640,4 +6640,25 @@ module.exports = function (ctx) {
   ctx.store.add(point);
 
   function stopDrawingAndRemove() {
-    ctx.events.changeMode(Constants.modes.S
+    ctx.events.changeMode(Constants.modes.SIMPLE_SELECT);
+    ctx.store.delete([point.id], { silent: true });
+  }
+
+  function handleClick(e) {
+    ctx.ui.queueMapClasses({ mouse: Constants.cursors.MOVE });
+    point.updateCoordinate('', e.lngLat.lng, e.lngLat.lat);
+    ctx.map.fire(Constants.events.CREATE, {
+      features: [point.toGeoJSON()]
+    });
+    ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [point.id] });
+  }
+
+  return {
+    start: function start() {
+      ctx.store.clearSelected();
+      ctx.ui.queueMapClasses({ mouse: Constants.cursors.ADD });
+      ctx.ui.setActiveButton(Constants.types.POINT);
+      this.on('click', CommonSelectors.true, handleClick);
+      this.on('tap', CommonSelectors.true, handleClick);
+      this.on('keyup', CommonSelectors.isEscapeKey, stopDrawingAndRemove);
+      this.on('keyup', CommonSelectors.isEnter
