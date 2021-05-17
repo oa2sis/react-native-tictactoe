@@ -6661,4 +6661,29 @@ module.exports = function (ctx) {
       this.on('click', CommonSelectors.true, handleClick);
       this.on('tap', CommonSelectors.true, handleClick);
       this.on('keyup', CommonSelectors.isEscapeKey, stopDrawingAndRemove);
-      this.on('keyup', CommonSelectors.isEnter
+      this.on('keyup', CommonSelectors.isEnterKey, stopDrawingAndRemove);
+      ctx.events.actionable({
+        combineFeatures: false,
+        uncombineFeatures: false,
+        trash: true
+      });
+    },
+    stop: function stop() {
+      ctx.ui.setActiveButton();
+      if (!point.getCoordinate().length) {
+        ctx.store.delete([point.id], { silent: true });
+      }
+    },
+    render: function render(geojson, callback) {
+      var isActivePoint = geojson.properties.id === point.id;
+      geojson.properties.active = isActivePoint ? Constants.activeStates.ACTIVE : Constants.activeStates.INACTIVE;
+      if (!isActivePoint) return callback(geojson);
+      // Never render the point we're drawing
+    },
+    trash: function trash() {
+      stopDrawingAndRemove();
+    }
+  };
+};
+
+},{"../constants":26,"../feature_types/point":31,"../lib/common_selectors":33}],58
