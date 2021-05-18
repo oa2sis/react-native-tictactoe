@@ -6686,4 +6686,33 @@ module.exports = function (ctx) {
   };
 };
 
-},{"../constants":26,"../feature_types/point":31,"../lib/common_selectors":33}],58
+},{"../constants":26,"../feature_types/point":31,"../lib/common_selectors":33}],58:[function(require,module,exports){
+'use strict';
+
+var CommonSelectors = require('../lib/common_selectors');
+var Polygon = require('../feature_types/polygon');
+var doubleClickZoom = require('../lib/double_click_zoom');
+var Constants = require('../constants');
+var isEventAtCoordinates = require('../lib/is_event_at_coordinates');
+var createVertex = require('../lib/create_vertex');
+
+module.exports = function (ctx) {
+
+  var polygon = new Polygon(ctx, {
+    type: Constants.geojsonTypes.FEATURE,
+    properties: {},
+    geometry: {
+      type: Constants.geojsonTypes.POLYGON,
+      coordinates: [[]]
+    }
+  });
+  var currentVertexPosition = 0;
+
+  if (ctx._test) ctx._test.polygon = polygon;
+
+  ctx.store.add(polygon);
+
+  return {
+    start: function start() {
+      ctx.store.clearSelected();
+      double
