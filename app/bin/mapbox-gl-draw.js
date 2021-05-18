@@ -6715,4 +6715,19 @@ module.exports = function (ctx) {
   return {
     start: function start() {
       ctx.store.clearSelected();
-      double
+      doubleClickZoom.disable(ctx);
+      ctx.ui.queueMapClasses({ mouse: Constants.cursors.ADD });
+      ctx.ui.setActiveButton(Constants.types.POLYGON);
+      this.on('mousemove', CommonSelectors.true, function (e) {
+        polygon.updateCoordinate('0.' + currentVertexPosition, e.lngLat.lng, e.lngLat.lat);
+        if (CommonSelectors.isVertex(e)) {
+          ctx.ui.queueMapClasses({ mouse: Constants.cursors.POINTER });
+        }
+      });
+      this.on('click', CommonSelectors.true, clickAnywhere);
+      this.on('click', CommonSelectors.isVertex, clickOnVertex);
+      this.on('tap', CommonSelectors.true, clickAnywhere);
+      this.on('tap', CommonSelectors.isVertex, clickOnVertex);
+
+      function clickAnywhere(e) {
+        if (currentVertexPosition > 0 && isEventAtCoordinates(e, polygon.coordinates[0][currentVertexPosition - 1]
