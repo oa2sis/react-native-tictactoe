@@ -6745,4 +6745,30 @@ module.exports = function (ctx) {
         ctx.events.changeMode(Constants.modes.SIMPLE_SELECT);
       });
       this.on('keyup', CommonSelectors.isEnterKey, function () {
-        ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [polygo
+        ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [polygon.id] });
+      });
+      ctx.events.actionable({
+        combineFeatures: false,
+        uncombineFeatures: false,
+        trash: true
+      });
+    },
+
+
+    stop: function stop() {
+      ctx.ui.queueMapClasses({ mouse: Constants.cursors.NONE });
+      doubleClickZoom.enable(ctx);
+      ctx.ui.setActiveButton();
+
+      // check to see if we've deleted this feature
+      if (ctx.store.get(polygon.id) === undefined) return;
+
+      //remove last added coordinate
+      polygon.removeCoordinate('0.' + currentVertexPosition);
+      if (polygon.isValid()) {
+        ctx.map.fire(Constants.events.CREATE, {
+          features: [polygon.toGeoJSON()]
+        });
+      } else {
+        ctx.store.delete([polygon.id], { silent: true });
+        ctx.events.chan
