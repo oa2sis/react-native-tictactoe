@@ -6771,4 +6771,23 @@ module.exports = function (ctx) {
         });
       } else {
         ctx.store.delete([polygon.id], { silent: true });
-        ctx.events.chan
+        ctx.events.changeMode(Constants.modes.SIMPLE_SELECT, {}, { silent: true });
+      }
+    },
+
+    render: function render(geojson, callback) {
+      var isActivePolygon = geojson.properties.id === polygon.id;
+      geojson.properties.active = isActivePolygon ? Constants.activeStates.ACTIVE : Constants.activeStates.INACTIVE;
+      if (!isActivePolygon) return callback(geojson);
+
+      // Don't render a polygon until it has two positions
+      // (and a 3rd which is just the first repeated)
+      if (geojson.geometry.coordinates.length === 0) return;
+
+      var coordinateCount = geojson.geometry.coordinates[0].length;
+
+      // If we have fewer than two positions (plus the closer),
+      // it's not yet a shape to render
+      if (coordinateCount < 3) return;
+
+      geojson.properties.meta = Constants.meta.FEATURE;
