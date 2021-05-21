@@ -6791,3 +6791,23 @@ module.exports = function (ctx) {
       if (coordinateCount < 3) return;
 
       geojson.properties.meta = Constants.meta.FEATURE;
+
+      // if we're rendering it; mark it as selected
+      ctx.store.setSelected(polygon.id);
+
+      if (coordinateCount > 4) {
+        // Add a start position marker to the map, clicking on this will finish the feature
+        // This should only be shown when we're in a valid spot
+        callback(createVertex(polygon.id, geojson.geometry.coordinates[0][0], '0.0', false));
+        var endPos = geojson.geometry.coordinates[0].length - 3;
+        callback(createVertex(polygon.id, geojson.geometry.coordinates[0][endPos], '0.' + endPos, false));
+      }
+
+      // If we have more than two positions (plus the closer),
+      // render the Polygon
+      if (coordinateCount > 3) {
+        return callback(geojson);
+      }
+
+      // If we've only drawn two positions (plus the closer),
+      // make a LineString instead of a Polygon
