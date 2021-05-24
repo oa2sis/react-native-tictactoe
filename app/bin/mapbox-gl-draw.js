@@ -6811,3 +6811,21 @@ module.exports = function (ctx) {
 
       // If we've only drawn two positions (plus the closer),
       // make a LineString instead of a Polygon
+      var lineCoordinates = [[geojson.geometry.coordinates[0][0][0], geojson.geometry.coordinates[0][0][1]], [geojson.geometry.coordinates[0][1][0], geojson.geometry.coordinates[0][1][1]]];
+      return callback({
+        type: Constants.geojsonTypes.FEATURE,
+        properties: geojson.properties,
+        geometry: {
+          coordinates: lineCoordinates,
+          type: Constants.geojsonTypes.LINE_STRING
+        }
+      });
+    },
+    trash: function trash() {
+      ctx.store.delete([polygon.id], { silent: true });
+      ctx.events.changeMode(Constants.modes.SIMPLE_SELECT);
+    }
+  };
+};
+
+},{"../constants":26,"../feature_types/polygon":32,"../lib/common_selectors":33,"../lib/create_vertex":37,"../lib/double_click_zoom":38,"../lib/is_event_at_coordinates":43}],59:[function(require,module,exports){
