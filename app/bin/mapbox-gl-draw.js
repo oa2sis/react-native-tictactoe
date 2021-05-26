@@ -6849,4 +6849,32 @@ module.exports = function (ctx) {
   var boxSelectElement = void 0;
   var boxSelecting = false;
   var canBoxSelect = false;
-  
+  var dragMoving = false;
+  var canDragMove = false;
+
+  var initiallySelectedFeatureIds = options.featureIds || [];
+
+  var fireUpdate = function fireUpdate() {
+    ctx.map.fire(Constants.events.UPDATE, {
+      action: Constants.updateActions.MOVE,
+      features: ctx.store.getSelected().map(function (f) {
+        return f.toGeoJSON();
+      })
+    });
+  };
+
+  var fireActionable = function fireActionable() {
+    var selectedFeatures = ctx.store.getSelected();
+
+    var multiFeatures = selectedFeatures.filter(function (feature) {
+      return feature instanceof MultiFeature;
+    });
+
+    var combineFeatures = false;
+
+    if (selectedFeatures.length > 1) {
+      (function () {
+        combineFeatures = true;
+        var featureType = selectedFeatures[0].type.replace('Multi', '');
+        selectedFeatures.forEach(function (feature) {
+     
