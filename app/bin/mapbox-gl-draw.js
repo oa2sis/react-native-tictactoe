@@ -6829,3 +6829,24 @@ module.exports = function (ctx) {
 };
 
 },{"../constants":26,"../feature_types/polygon":32,"../lib/common_selectors":33,"../lib/create_vertex":37,"../lib/double_click_zoom":38,"../lib/is_event_at_coordinates":43}],59:[function(require,module,exports){
+'use strict';
+
+var CommonSelectors = require('../lib/common_selectors');
+var mouseEventPoint = require('../lib/mouse_event_point');
+var featuresAt = require('../lib/features_at');
+var createSupplementaryPoints = require('../lib/create_supplementary_points');
+var StringSet = require('../lib/string_set');
+var doubleClickZoom = require('../lib/double_click_zoom');
+var moveFeatures = require('../lib/move_features');
+var Constants = require('../constants');
+var MultiFeature = require('../feature_types/multi_feature');
+
+module.exports = function (ctx) {
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  var dragMoveLocation = null;
+  var boxSelectStartLocation = null;
+  var boxSelectElement = void 0;
+  var boxSelecting = false;
+  var canBoxSelect = false;
+  
