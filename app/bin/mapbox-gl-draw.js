@@ -6877,4 +6877,34 @@ module.exports = function (ctx) {
         combineFeatures = true;
         var featureType = selectedFeatures[0].type.replace('Multi', '');
         selectedFeatures.forEach(function (feature) {
-     
+          if (feature.type.replace('Multi', '') !== featureType) {
+            combineFeatures = false;
+          }
+        });
+      })();
+    }
+
+    var uncombineFeatures = multiFeatures.length > 0;
+    var trash = selectedFeatures.length > 0;
+
+    ctx.events.actionable({
+      combineFeatures: combineFeatures, uncombineFeatures: uncombineFeatures, trash: trash
+    });
+  };
+
+  var getUniqueIds = function getUniqueIds(allFeatures) {
+    if (!allFeatures.length) return [];
+    var ids = allFeatures.map(function (s) {
+      return s.properties.id;
+    }).filter(function (id) {
+      return id !== undefined;
+    }).reduce(function (memo, id) {
+      memo.add(id);
+      return memo;
+    }, new StringSet());
+
+    return ids.values();
+  };
+
+  var stopExtendedInteractions = function stopExtendedInteractions() {
+   
