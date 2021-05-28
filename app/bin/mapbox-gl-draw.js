@@ -6935,4 +6935,22 @@ module.exports = function (ctx) {
       }
 
       // Any mouseup should stop box selecting and dragMoving
-      this.on('mouseup', CommonSelectors.t
+      this.on('mouseup', CommonSelectors.true, stopExtendedInteractions);
+
+      // On mousemove that is not a drag, stop extended interactions.
+      // This is useful if you drag off the canvas, release the button,
+      // then move the mouse back over the canvas --- we don't allow the
+      // interaction to continue then, but we do let it continue if you held
+      // the mouse button that whole time
+      this.on('mousemove', CommonSelectors.true, stopExtendedInteractions);
+
+      // As soon as you mouse leaves the canvas, update the feature
+      this.on('mouseout', function () {
+        return dragMoving;
+      }, fireUpdate);
+
+      // Click (with or without shift) on no feature
+      this.on('click', CommonSelectors.noTarget, clickAnywhere);
+      this.on('tap', CommonSelectors.noTarget, clickAnywhere);
+
+ 
