@@ -6907,4 +6907,32 @@ module.exports = function (ctx) {
   };
 
   var stopExtendedInteractions = function stopExtendedInteractions() {
-   
+    if (boxSelectElement) {
+      if (boxSelectElement.parentNode) boxSelectElement.parentNode.removeChild(boxSelectElement);
+      boxSelectElement = null;
+    }
+
+    ctx.map.dragPan.enable();
+
+    boxSelecting = false;
+    canBoxSelect = false;
+    dragMoving = false;
+    canDragMove = false;
+  };
+
+  return {
+    stop: function stop() {
+      doubleClickZoom.enable(ctx);
+    },
+    start: function start() {
+      // Select features that should start selected,
+      // probably passed in from a `draw_*` mode
+      if (ctx.store) {
+        ctx.store.setSelected(initiallySelectedFeatureIds.filter(function (id) {
+          return ctx.store.get(id) !== undefined;
+        }));
+        fireActionable();
+      }
+
+      // Any mouseup should stop box selecting and dragMoving
+      this.on('mouseup', CommonSelectors.t
