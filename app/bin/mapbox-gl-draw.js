@@ -6953,4 +6953,25 @@ module.exports = function (ctx) {
       this.on('click', CommonSelectors.noTarget, clickAnywhere);
       this.on('tap', CommonSelectors.noTarget, clickAnywhere);
 
- 
+      // Click (with or without shift) on a vertex
+      this.on('click', CommonSelectors.isOfMetaType(Constants.meta.VERTEX), clickOnVertex);
+      this.on('tap', CommonSelectors.isOfMetaType(Constants.meta.VERTEX), clickOnVertex);
+
+      function clickAnywhere() {
+        var _this = this;
+
+        // Clear the re-render selection
+        var wasSelected = ctx.store.getSelectedIds();
+        if (wasSelected.length) {
+          ctx.store.clearSelected();
+          wasSelected.forEach(function (id) {
+            return _this.render(id);
+          });
+        }
+        doubleClickZoom.enable(ctx);
+        stopExtendedInteractions();
+      }
+
+      function clickOnVertex(e) {
+        // Enter direct select mode
+        ctx.even
