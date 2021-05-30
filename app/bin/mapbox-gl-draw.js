@@ -6997,4 +6997,24 @@ module.exports = function (ctx) {
         this.render(e.featureTarget.properties.id);
 
         // Set up the state for drag moving
-   
+        canDragMove = true;
+        dragMoveLocation = e.lngLat;
+      }
+
+      // Click (with or without shift) on any feature
+      this.on('click', CommonSelectors.isFeature, clickOnFeature);
+      this.on('tap', CommonSelectors.isFeature, clickOnFeature);
+
+      function clickOnFeature(e) {
+        // Stop everything
+        doubleClickZoom.disable(ctx);
+        stopExtendedInteractions();
+
+        var isShiftClick = CommonSelectors.isShiftDown(e);
+        var selectedFeatureIds = ctx.store.getSelectedIds();
+        var featureId = e.featureTarget.properties.id;
+        var isFeatureSelected = ctx.store.isSelected(featureId);
+
+        // Click (without shift) on any selected feature but a point
+        if (!isShiftClick && isFeatureSelected && ctx.store.get(featureId).type !== Constants.geojsonTypes.POINT) {
+          // 
