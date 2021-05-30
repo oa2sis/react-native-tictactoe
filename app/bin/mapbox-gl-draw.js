@@ -6974,4 +6974,27 @@ module.exports = function (ctx) {
 
       function clickOnVertex(e) {
         // Enter direct select mode
-        ctx.even
+        ctx.events.changeMode(Constants.modes.DIRECT_SELECT, {
+          featureId: e.featureTarget.properties.parent,
+          coordPath: e.featureTarget.properties.coord_path,
+          startPos: e.lngLat
+        });
+        ctx.ui.queueMapClasses({ mouse: Constants.cursors.MOVE });
+      }
+
+      // Mousedown on a selected feature
+      this.on('mousedown', CommonSelectors.isActiveFeature, startOnActiveFeature);
+      this.on('touchstart', CommonSelectors.isActiveFeature, startOnActiveFeature);
+
+      function startOnActiveFeature(e) {
+        // Stop any already-underway extended interactions
+        stopExtendedInteractions();
+
+        // Disable map.dragPan immediately so it can't start
+        ctx.map.dragPan.disable();
+
+        // Re-render it and enable drag move
+        this.render(e.featureTarget.properties.id);
+
+        // Set up the state for drag moving
+   
