@@ -7017,4 +7017,24 @@ module.exports = function (ctx) {
 
         // Click (without shift) on any selected feature but a point
         if (!isShiftClick && isFeatureSelected && ctx.store.get(featureId).type !== Constants.geojsonTypes.POINT) {
-          // 
+          // Enter direct select mode
+          return ctx.events.changeMode(Constants.modes.DIRECT_SELECT, {
+            featureId: featureId
+          });
+        }
+
+        // Shift-click on a selected feature
+        if (isFeatureSelected && isShiftClick) {
+          // Deselect it
+          ctx.store.deselect(featureId);
+          ctx.ui.queueMapClasses({ mouse: Constants.cursors.POINTER });
+          if (selectedFeatureIds.length === 1) {
+            doubleClickZoom.enable(ctx);
+          }
+          // Shift-click on an unselected feature
+        } else if (!isFeatureSelected && isShiftClick) {
+          // Add it to the selection
+          ctx.store.select(featureId);
+          ctx.ui.queueMapClasses({ mouse: Constants.cursors.MOVE });
+          // Click (without shift) on an unselected feature
+       
