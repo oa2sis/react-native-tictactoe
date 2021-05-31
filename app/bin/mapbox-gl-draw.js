@@ -7037,4 +7037,30 @@ module.exports = function (ctx) {
           ctx.store.select(featureId);
           ctx.ui.queueMapClasses({ mouse: Constants.cursors.MOVE });
           // Click (without shift) on an unselected feature
-       
+        } else if (!isFeatureSelected && !isShiftClick) {
+          // Make it the only selected feature
+          selectedFeatureIds.forEach(this.render);
+          ctx.store.setSelected(featureId);
+          ctx.ui.queueMapClasses({ mouse: Constants.cursors.MOVE });
+        }
+
+        // No matter what, re-render the clicked feature
+        this.render(featureId);
+      }
+
+      // Dragging when drag move is enabled
+      this.on('drag', function () {
+        return canDragMove;
+      }, function (e) {
+        dragMoving = true;
+        e.originalEvent.stopPropagation();
+
+        var delta = {
+          lng: e.lngLat.lng - dragMoveLocation.lng,
+          lat: e.lngLat.lat - dragMoveLocation.lat
+        };
+
+        moveFeatures(ctx.store.getSelected(), delta);
+
+        dragMoveLocation = e.lngLat;
+      })
