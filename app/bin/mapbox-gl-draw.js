@@ -7063,4 +7063,28 @@ module.exports = function (ctx) {
         moveFeatures(ctx.store.getSelected(), delta);
 
         dragMoveLocation = e.lngLat;
-      })
+      });
+
+      // Mouseup, always
+      this.on('mouseup', CommonSelectors.true, function (e) {
+        // End any extended interactions
+        if (dragMoving) {
+          fireUpdate();
+        } else if (boxSelecting) {
+          var bbox = [boxSelectStartLocation, mouseEventPoint(e.originalEvent, ctx.container)];
+          var featuresInBox = featuresAt.click(null, bbox, ctx);
+          var idsToSelect = getUniqueIds(featuresInBox).filter(function (id) {
+            return !ctx.store.isSelected(id);
+          });
+
+          if (idsToSelect.length) {
+            ctx.store.select(idsToSelect);
+            idsToSelect.forEach(this.render);
+            ctx.ui.queueMapClasses({ mouse: Constants.cursors.MOVE });
+          }
+        }
+        stopExtendedInteractions();
+      });
+
+      if (ctx.options.boxSelect) {
+        // Sh
