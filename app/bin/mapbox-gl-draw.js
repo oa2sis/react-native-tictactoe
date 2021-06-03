@@ -7087,4 +7087,24 @@ module.exports = function (ctx) {
       });
 
       if (ctx.options.boxSelect) {
-        // Sh
+        // Shift-mousedown anywhere
+        this.on('mousedown', CommonSelectors.isShiftMousedown, function (e) {
+          stopExtendedInteractions();
+          ctx.map.dragPan.disable();
+          // Enable box select
+          boxSelectStartLocation = mouseEventPoint(e.originalEvent, ctx.container);
+          canBoxSelect = true;
+        });
+
+        // Drag when box select is enabled
+        this.on('drag', function () {
+          return canBoxSelect;
+        }, function (e) {
+          boxSelecting = true;
+          ctx.ui.queueMapClasses({ mouse: Constants.cursors.ADD });
+
+          // Create the box node if it doesn't exist
+          if (!boxSelectElement) {
+            boxSelectElement = document.createElement('div');
+            boxSelectElement.classList.add(Constants.classes.BOX_SELECT);
+            ctx.container.appendChi
