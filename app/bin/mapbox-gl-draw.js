@@ -7107,4 +7107,21 @@ module.exports = function (ctx) {
           if (!boxSelectElement) {
             boxSelectElement = document.createElement('div');
             boxSelectElement.classList.add(Constants.classes.BOX_SELECT);
-            ctx.container.appendChi
+            ctx.container.appendChild(boxSelectElement);
+          }
+
+          // Adjust the box node's width and xy position
+          var current = mouseEventPoint(e.originalEvent, ctx.container);
+          var minX = Math.min(boxSelectStartLocation.x, current.x);
+          var maxX = Math.max(boxSelectStartLocation.x, current.x);
+          var minY = Math.min(boxSelectStartLocation.y, current.y);
+          var maxY = Math.max(boxSelectStartLocation.y, current.y);
+          var translateValue = 'translate(' + minX + 'px, ' + minY + 'px)';
+          boxSelectElement.style.transform = translateValue;
+          boxSelectElement.style.WebkitTransform = translateValue;
+          boxSelectElement.style.width = maxX - minX + 'px';
+          boxSelectElement.style.height = maxY - minY + 'px';
+        });
+      }
+    },
+    render: function render(geojson,
