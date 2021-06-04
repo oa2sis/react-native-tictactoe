@@ -7124,4 +7124,22 @@ module.exports = function (ctx) {
         });
       }
     },
-    render: function render(geojson,
+    render: function render(geojson, push) {
+      geojson.properties.active = ctx.store.isSelected(geojson.properties.id) ? Constants.activeStates.ACTIVE : Constants.activeStates.INACTIVE;
+      push(geojson);
+      fireActionable();
+      if (geojson.properties.active !== Constants.activeStates.ACTIVE || geojson.geometry.type === Constants.geojsonTypes.POINT) return;
+      createSupplementaryPoints(geojson).forEach(push);
+    },
+    trash: function trash() {
+      ctx.store.delete(ctx.store.getSelectedIds());
+      fireActionable();
+    },
+    combineFeatures: function combineFeatures() {
+      var selectedFeatures = ctx.store.getSelected();
+
+      if (selectedFeatures.length === 0 || selectedFeatures.length < 2) return;
+
+      var coordinates = [],
+          featuresCombined = [];
+      var featureType = selectedFeatures[
