@@ -7142,4 +7142,34 @@ module.exports = function (ctx) {
 
       var coordinates = [],
           featuresCombined = [];
-      var featureType = selectedFeatures[
+      var featureType = selectedFeatures[0].type.replace('Multi', '');
+
+      for (var i = 0; i < selectedFeatures.length; i++) {
+        var feature = selectedFeatures[i];
+
+        if (feature.type.replace('Multi', '') !== featureType) {
+          return;
+        }
+        if (feature.type.includes('Multi')) {
+          feature.getCoordinates().forEach(function (subcoords) {
+            coordinates.push(subcoords);
+          });
+        } else {
+          coordinates.push(feature.getCoordinates());
+        }
+
+        featuresCombined.push(feature.toGeoJSON());
+      }
+
+      if (featuresCombined.length > 1) {
+
+        var multiFeature = new MultiFeature(ctx, {
+          type: Constants.geojsonTypes.FEATURE,
+          properties: featuresCombined[0].properties,
+          geometry: {
+            type: 'Multi' + featureType,
+            coordinates: coordinates
+          }
+        });
+
+    
