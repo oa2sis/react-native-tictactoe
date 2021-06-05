@@ -7172,4 +7172,28 @@ module.exports = function (ctx) {
           }
         });
 
-    
+        ctx.store.add(multiFeature);
+        ctx.store.delete(ctx.store.getSelectedIds(), { silent: true });
+        ctx.store.setSelected([multiFeature.id]);
+
+        ctx.map.fire(Constants.events.COMBINE_FEATURES, {
+          createdFeatures: [multiFeature.toGeoJSON()],
+          deletedFeatures: featuresCombined
+        });
+      }
+      fireActionable();
+    },
+    uncombineFeatures: function uncombineFeatures() {
+      var selectedFeatures = ctx.store.getSelected();
+      if (selectedFeatures.length === 0) return;
+
+      var createdFeatures = [];
+      var featuresUncombined = [];
+
+      var _loop = function _loop(i) {
+        var feature = selectedFeatures[i];
+
+        if (feature instanceof MultiFeature) {
+          feature.getFeatures().forEach(function (subFeature) {
+            ctx.store.add(subFeature);
+            subFeature.
