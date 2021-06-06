@@ -7220,4 +7220,36 @@ module.exports = function (ctx) {
   };
 };
 
-},{"../constants":26,"../feature_types/multi_feature":30,"../lib/common_selectors":33,"../lib/create_supplementary_points":36,"../lib/double_click_zoom":38,"../lib/features_at":40,"../lib/mouse_event_po
+},{"../constants":26,"../feature_types/multi_feature":30,"../lib/common_selectors":33,"../lib/create_supplementary_points":36,"../lib/double_click_zoom":38,"../lib/features_at":40,"../lib/mouse_event_point":47,"../lib/move_features":48,"../lib/string_set":50}],60:[function(require,module,exports){
+"use strict";
+
+module.exports = function (ctx) {
+  return {
+    stop: function stop() {},
+    start: function start() {
+      ctx.events.actionable({
+        combineFeatures: false,
+        uncombineFeatures: false,
+        trash: false
+      });
+    },
+    render: function render(geojson, push) {
+      push(geojson);
+    }
+  };
+};
+
+},{}],61:[function(require,module,exports){
+'use strict';
+
+var xtend = require('xtend');
+var Constants = require('./constants');
+
+var defaultOptions = {
+  defaultMode: Constants.modes.SIMPLE_SELECT,
+  keybindings: true,
+  touchEnabled: true,
+  clickBuffer: 2,
+  touchBuffer: 25,
+  boxSelect: true,
+  displayControlsDefault: true,
