@@ -7196,4 +7196,28 @@ module.exports = function (ctx) {
         if (feature instanceof MultiFeature) {
           feature.getFeatures().forEach(function (subFeature) {
             ctx.store.add(subFeature);
-            subFeature.
+            subFeature.properties = feature.properties;
+            createdFeatures.push(subFeature.toGeoJSON());
+            ctx.store.select([subFeature.id]);
+          });
+          ctx.store.delete(feature.id, { silent: true });
+          featuresUncombined.push(feature.toGeoJSON());
+        }
+      };
+
+      for (var i = 0; i < selectedFeatures.length; i++) {
+        _loop(i);
+      }
+
+      if (createdFeatures.length > 1) {
+        ctx.map.fire(Constants.events.UNCOMBINE_FEATURES, {
+          createdFeatures: createdFeatures,
+          deletedFeatures: featuresUncombined
+        });
+      }
+      fireActionable();
+    }
+  };
+};
+
+},{"../constants":26,"../feature_types/multi_feature":30,"../lib/common_selectors":33,"../lib/create_supplementary_points":36,"../lib/double_click_zoom":38,"../lib/features_at":40,"../lib/mouse_event_po
