@@ -7253,3 +7253,42 @@ var defaultOptions = {
   touchBuffer: 25,
   boxSelect: true,
   displayControlsDefault: true,
+  styles: require('./lib/theme'),
+  controls: {},
+  userProperties: false
+};
+
+var showControls = {
+  point: true,
+  line_string: true,
+  polygon: true,
+  trash: true,
+  combine_features: true,
+  uncombine_features: true
+};
+
+var hideControls = {
+  point: false,
+  line_string: false,
+  polygon: false,
+  trash: false,
+  combine_features: false,
+  uncombine_features: false
+};
+
+function addSources(styles, sourceBucket) {
+  return styles.map(function (style) {
+    if (style.source) return style;
+    return xtend(style, {
+      id: style.id + '.' + sourceBucket,
+      source: sourceBucket === 'hot' ? Constants.sources.HOT : Constants.sources.COLD
+    });
+  });
+}
+
+module.exports = function () {
+  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+  var withDefaults = xtend(options);
+
+  if (!option
