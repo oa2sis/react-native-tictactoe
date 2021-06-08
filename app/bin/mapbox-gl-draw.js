@@ -7291,4 +7291,30 @@ module.exports = function () {
 
   var withDefaults = xtend(options);
 
-  if (!option
+  if (!options.controls) {
+    withDefaults.controls = {};
+  }
+
+  if (options.displayControlsDefault === false) {
+    withDefaults.controls = xtend(hideControls, options.controls);
+  } else {
+    withDefaults.controls = xtend(showControls, options.controls);
+  }
+
+  withDefaults = xtend(defaultOptions, withDefaults);
+
+  // Layers with a shared source should be adjacent for performance reasons
+  withDefaults.styles = addSources(withDefaults.styles, 'cold').concat(addSources(withDefaults.styles, 'hot'));
+
+  return withDefaults;
+};
+
+},{"./constants":26,"./lib/theme":52,"xtend":24}],62:[function(require,module,exports){
+'use strict';
+
+var Constants = require('./constants');
+
+module.exports = function render() {
+  var store = this;
+  var mapExists = store.ctx.map && store.ctx.map.getSource(Constants.sources.HOT) !== undefined;
+  if (!m
