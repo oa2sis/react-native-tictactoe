@@ -7317,4 +7317,28 @@ var Constants = require('./constants');
 module.exports = function render() {
   var store = this;
   var mapExists = store.ctx.map && store.ctx.map.getSource(Constants.sources.HOT) !== undefined;
-  if (!m
+  if (!mapExists) return cleanup();
+
+  var mode = store.ctx.events.currentModeName();
+
+  store.ctx.ui.queueMapClasses({ mode: mode });
+
+  var newHotIds = [];
+  var newColdIds = [];
+
+  if (store.isDirty) {
+    newColdIds = store.getAllIds();
+  } else {
+    newHotIds = store.getChangedIds().filter(function (id) {
+      return store.get(id) !== undefined;
+    });
+    newColdIds = store.sources.hot.filter(function (geojson) {
+      return geojson.properties.id && newHotIds.indexOf(geojson.properties.id) === -1 && store.get(geojson.properties.id) !== undefined;
+    }).map(function (geojson) {
+      return geojson.properties.id;
+    });
+  }
+
+  store.sources.hot = [];
+  var lastColdCount = store.sources.cold.length;
+  store.sources.cold = store.isDirty ? [] : store.sources.cold.filter(function (geojson) {
