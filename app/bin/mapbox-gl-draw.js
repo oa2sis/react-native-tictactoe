@@ -7342,3 +7342,33 @@ module.exports = function render() {
   store.sources.hot = [];
   var lastColdCount = store.sources.cold.length;
   store.sources.cold = store.isDirty ? [] : store.sources.cold.filter(function (geojson) {
+    var id = geojson.properties.id || geojson.properties.parent;
+    return newHotIds.indexOf(id) === -1;
+  });
+
+  var coldChanged = lastColdCount !== store.sources.cold.length || newColdIds.length > 0;
+
+  newHotIds.forEach(function (id) {
+    return renderFeature(id, 'hot');
+  });
+  newColdIds.forEach(function (id) {
+    return renderFeature(id, 'cold');
+  });
+
+  function renderFeature(id, source) {
+    var feature = store.get(id);
+    var featureInternal = feature.internal(mode);
+    store.ctx.events.currentModeRender(featureInternal, function (geojson) {
+      store.sources[source].push(geojson);
+    });
+  }
+
+  if (coldChanged) {
+    store.ctx.map.getSource(Constants.sources.COLD).setData({
+      type: Constants.geojsonTypes.FEATURE_COLLECTION,
+      features: store.sources.cold
+    });
+  }
+
+  store.ctx.map.getSource(Constants.sources.HOT).setData({
+  
