@@ -7371,4 +7371,29 @@ module.exports = function render() {
   }
 
   store.ctx.map.getSource(Constants.sources.HOT).setData({
-  
+    type: Constants.geojsonTypes.FEATURE_COLLECTION,
+    features: store.sources.hot
+  });
+
+  if (store._emitSelectionChange) {
+    store.ctx.map.fire(Constants.events.SELECTION_CHANGE, {
+      features: store.getSelected().map(function (feature) {
+        return feature.toGeoJSON();
+      }),
+      points: store.getSelectedCoordinates().map(function (coordinate) {
+        return {
+          type: Constants.geojsonTypes.FEATURE,
+          properties: {},
+          geometry: {
+            type: Constants.geojsonTypes.POINT,
+            coordinates: coordinate.coordinates
+          }
+        };
+      })
+    });
+    store._emitSelectionChange = false;
+  }
+
+  if (store._deletedFeaturesToEmit.length) {
+    var geojsonToEmit = store._deletedFeaturesToEmit.map(function (feature) {
+      return feature.to
