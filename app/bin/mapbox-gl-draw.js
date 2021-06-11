@@ -7396,4 +7396,46 @@ module.exports = function render() {
 
   if (store._deletedFeaturesToEmit.length) {
     var geojsonToEmit = store._deletedFeaturesToEmit.map(function (feature) {
-      return feature.to
+      return feature.toGeoJSON();
+    });
+
+    store._deletedFeaturesToEmit = [];
+
+    store.ctx.map.fire(Constants.events.DELETE, {
+      features: geojsonToEmit
+    });
+  }
+
+  store.ctx.map.fire(Constants.events.RENDER, {});
+  cleanup();
+
+  function cleanup() {
+    store.isDirty = false;
+    store.clearChangedIds();
+  }
+};
+
+},{"./constants":26}],63:[function(require,module,exports){
+'use strict';
+
+var events = require('./events');
+var Store = require('./store');
+var ui = require('./ui');
+var Constants = require('./constants');
+
+module.exports = function (ctx) {
+
+  ctx.events = events(ctx);
+
+  ctx.map = null;
+  ctx.container = null;
+  ctx.store = null;
+  ctx.ui = ui(ctx);
+
+  var controlContainer = null;
+
+  var setup = {
+    onRemove: function onRemove() {
+      setup.removeLayers();
+      ctx.ui.removeButtons();
+  
