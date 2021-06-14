@@ -7467,3 +7467,36 @@ module.exports = function (ctx) {
 
       var connect = function connect() {
         map.off('load', connect);
+        clearInterval(intervalId);
+        setup.addLayers();
+        ctx.events.addEventListeners();
+      };
+
+      if (map.loaded()) {
+        connect();
+      } else {
+        map.on('load', connect);
+        intervalId = setInterval(function () {
+          if (map.loaded()) connect();
+        }, 16);
+      }
+
+      return controlContainer;
+    },
+    addLayers: function addLayers() {
+      // drawn features style
+      ctx.map.addSource(Constants.sources.COLD, {
+        data: {
+          type: Constants.geojsonTypes.FEATURE_COLLECTION,
+          features: []
+        },
+        type: 'geojson'
+      });
+
+      // hot features style
+      ctx.map.addSource(Constants.sources.HOT, {
+        data: {
+          type: Constants.geojsonTypes.FEATURE_COLLECTION,
+          features: []
+        },
+  
