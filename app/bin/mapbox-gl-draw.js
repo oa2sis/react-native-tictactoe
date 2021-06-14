@@ -7438,4 +7438,32 @@ module.exports = function (ctx) {
     onRemove: function onRemove() {
       setup.removeLayers();
       ctx.ui.removeButtons();
-  
+      ctx.events.removeEventListeners();
+      ctx.map = null;
+      ctx.container = null;
+      ctx.store = null;
+
+      if (controlContainer && controlContainer.parentNode) controlContainer.parentNode.removeChild(controlContainer);
+      controlContainer = null;
+
+      return this;
+    },
+    onAdd: function onAdd(map) {
+      ctx.map = map;
+      ctx.container = map.getContainer();
+      ctx.store = new Store(ctx);
+
+      controlContainer = ctx.ui.addButtons();
+
+      if (ctx.options.boxSelect) {
+        map.boxZoom.disable();
+        // Need to toggle dragPan on and off or else first
+        // dragPan disable attempt in simple_select doesn't work
+        map.dragPan.disable();
+        map.dragPan.enable();
+      }
+
+      var intervalId = null;
+
+      var connect = function connect() {
+        map.off('load', connect);
