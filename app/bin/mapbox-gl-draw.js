@@ -7499,4 +7499,38 @@ module.exports = function (ctx) {
           type: Constants.geojsonTypes.FEATURE_COLLECTION,
           features: []
         },
-  
+        type: 'geojson'
+      });
+
+      ctx.options.styles.forEach(function (style) {
+        ctx.map.addLayer(style);
+      });
+
+      ctx.store.render();
+    },
+    removeLayers: function removeLayers() {
+      ctx.options.styles.forEach(function (style) {
+        ctx.map.removeLayer(style.id);
+      });
+
+      ctx.map.removeSource(Constants.sources.COLD);
+      ctx.map.removeSource(Constants.sources.HOT);
+    }
+  };
+
+  ctx.setup = setup;
+
+  return setup;
+};
+
+},{"./constants":26,"./events":27,"./store":64,"./ui":65}],64:[function(require,module,exports){
+'use strict';
+
+var throttle = require('./lib/throttle');
+var toDenseArray = require('./lib/to_dense_array');
+var StringSet = require('./lib/string_set');
+var render = require('./render');
+
+var Store = module.exports = function (ctx) {
+  this._features = {};
+  this._featureIds =
