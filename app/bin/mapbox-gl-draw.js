@@ -7533,4 +7533,44 @@ var render = require('./render');
 
 var Store = module.exports = function (ctx) {
   this._features = {};
-  this._featureIds =
+  this._featureIds = new StringSet();
+  this._selectedFeatureIds = new StringSet();
+  this._selectedCoordinates = [];
+  this._changedFeatureIds = new StringSet();
+  this._deletedFeaturesToEmit = [];
+  this._emitSelectionChange = false;
+  this.ctx = ctx;
+  this.sources = {
+    hot: [],
+    cold: []
+  };
+  this.render = throttle(render, 16, this);
+  this.isDirty = false;
+};
+
+/**
+ * Delays all rendering until the returned function is invoked
+ * @return {Function} renderBatch
+ */
+Store.prototype.createRenderBatch = function () {
+  var _this = this;
+
+  var holdRender = this.render;
+  var numRenders = 0;
+  this.render = function () {
+    numRenders++;
+  };
+
+  return function () {
+    _this.render = holdRender;
+    if (numRenders > 0) {
+      _this.render();
+    }
+  };
+};
+
+/**
+ * Sets the store's state to dirty.
+ * @return {Store} this
+ */
+Store.prototype.se
