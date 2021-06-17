@@ -7573,4 +7573,46 @@ Store.prototype.createRenderBatch = function () {
  * Sets the store's state to dirty.
  * @return {Store} this
  */
-Store.prototype.se
+Store.prototype.setDirty = function () {
+  this.isDirty = true;
+  return this;
+};
+
+/**
+ * Sets a feature's state to changed.
+ * @param {string} featureId
+ * @return {Store} this
+ */
+Store.prototype.featureChanged = function (featureId) {
+  this._changedFeatureIds.add(featureId);
+  return this;
+};
+
+/**
+ * Gets the ids of all features currently in changed state.
+ * @return {Store} this
+ */
+Store.prototype.getChangedIds = function () {
+  return this._changedFeatureIds.values();
+};
+
+/**
+ * Sets all features to unchanged state.
+ * @return {Store} this
+ */
+Store.prototype.clearChangedIds = function () {
+  this._changedFeatureIds.clear();
+  return this;
+};
+
+/**
+ * Gets the ids of all features in the store.
+ * @return {Store} this
+ */
+Store.prototype.getAllIds = function () {
+  return this._featureIds.values();
+};
+
+/**
+ * Adds a feature to the store.
+ * @param {Object} feature
