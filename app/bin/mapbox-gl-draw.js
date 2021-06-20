@@ -7616,3 +7616,29 @@ Store.prototype.getAllIds = function () {
 /**
  * Adds a feature to the store.
  * @param {Object} feature
+ *
+ * @return {Store} this
+ */
+Store.prototype.add = function (feature) {
+  this.featureChanged(feature.id);
+  this._features[feature.id] = feature;
+  this._featureIds.add(feature.id);
+  return this;
+};
+
+/**
+ * Deletes a feature or array of features from the store.
+ * Cleans up after the deletion by deselecting the features.
+ * If changes were made, sets the state to the dirty
+ * and fires an event.
+ * @param {string | Array<string>} featureIds
+ * @param {Object} [options]
+ * @param {Object} [options.silent] - If `true`, this invocation will not fire an event.
+ * @return {Store} this
+ */
+Store.prototype.delete = function (featureIds) {
+  var _this2 = this;
+
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  toDenseArray(featureIds).forEach(func
