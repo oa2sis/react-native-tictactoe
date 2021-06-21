@@ -7641,4 +7641,35 @@ Store.prototype.delete = function (featureIds) {
 
   var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-  toDenseArray(featureIds).forEach(func
+  toDenseArray(featureIds).forEach(function (id) {
+    if (!_this2._featureIds.has(id)) return;
+    _this2._featureIds.delete(id);
+    _this2._selectedFeatureIds.delete(id);
+    if (!options.silent) {
+      if (_this2._deletedFeaturesToEmit.indexOf(_this2._features[id]) === -1) {
+        _this2._deletedFeaturesToEmit.push(_this2._features[id]);
+      }
+    }
+    delete _this2._features[id];
+    _this2.isDirty = true;
+  });
+  refreshSelectedCoordinates.call(this, options);
+  return this;
+};
+
+/**
+ * Returns a feature in the store matching the specified value.
+ * @return {Object | undefined} feature
+ */
+Store.prototype.get = function (id) {
+  return this._features[id];
+};
+
+/**
+ * Returns all features in the store.
+ * @return {Array<Object>}
+ */
+Store.prototype.getAll = function () {
+  var _this3 = this;
+
+  return Object.k
