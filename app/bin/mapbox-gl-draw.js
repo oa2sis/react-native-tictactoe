@@ -7672,4 +7672,34 @@ Store.prototype.get = function (id) {
 Store.prototype.getAll = function () {
   var _this3 = this;
 
-  return Object.k
+  return Object.keys(this._features).map(function (id) {
+    return _this3._features[id];
+  });
+};
+
+/**
+ * Adds features to the current selection.
+ * @param {string | Array<string>} featureIds
+ * @param {Object} [options]
+ * @param {Object} [options.silent] - If `true`, this invocation will not fire an event.
+ * @return {Store} this
+ */
+Store.prototype.select = function (featureIds) {
+  var _this4 = this;
+
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  toDenseArray(featureIds).forEach(function (id) {
+    if (_this4._selectedFeatureIds.has(id)) return;
+    _this4._selectedFeatureIds.add(id);
+    _this4._changedFeatureIds.add(id);
+    if (!options.silent) {
+      _this4._emitSelectionChange = true;
+    }
+  });
+  return this;
+};
+
+/**
+ * Deletes features from the current selection.
+ * @param
