@@ -7702,4 +7702,30 @@ Store.prototype.select = function (featureIds) {
 
 /**
  * Deletes features from the current selection.
- * @param
+ * @param {string | Array<string>} featureIds
+ * @param {Object} [options]
+ * @param {Object} [options.silent] - If `true`, this invocation will not fire an event.
+ * @return {Store} this
+ */
+Store.prototype.deselect = function (featureIds) {
+  var _this5 = this;
+
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  toDenseArray(featureIds).forEach(function (id) {
+    if (!_this5._selectedFeatureIds.has(id)) return;
+    _this5._selectedFeatureIds.delete(id);
+    _this5._changedFeatureIds.add(id);
+    if (!options.silent) {
+      _this5._emitSelectionChange = true;
+    }
+  });
+  refreshSelectedCoordinates.call(this, options);
+  return this;
+};
+
+/**
+ * Clears the current selection.
+ * @param {Object} [options]
+ * @param {Object} [options.silent] - If `true`, this invocation will not fire an event.
+ * @retu
