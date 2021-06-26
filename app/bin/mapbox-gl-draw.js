@@ -7728,4 +7728,26 @@ Store.prototype.deselect = function (featureIds) {
  * Clears the current selection.
  * @param {Object} [options]
  * @param {Object} [options.silent] - If `true`, this invocation will not fire an event.
- * @retu
+ * @return {Store} this
+ */
+Store.prototype.clearSelected = function () {
+  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+  this.deselect(this._selectedFeatureIds.values(), { silent: options.silent });
+  return this;
+};
+
+/**
+ * Sets the store's selection, clearing any prior values.
+ * If no feature ids are passed, the store is just cleared.
+ * @param {string | Array<string> | undefined} featureIds
+ * @param {Object} [options]
+ * @param {Object} [options.silent] - If `true`, this invocation will not fire an event.
+ * @return {Store} this
+ */
+Store.prototype.setSelected = function (featureIds) {
+  var _this6 = this;
+
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  featureIds = toDenseArray(f
