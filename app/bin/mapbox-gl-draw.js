@@ -7750,4 +7750,32 @@ Store.prototype.setSelected = function (featureIds) {
 
   var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-  featureIds = toDenseArray(f
+  featureIds = toDenseArray(featureIds);
+
+  // Deselect any features not in the new selection
+  this.deselect(this._selectedFeatureIds.values().filter(function (id) {
+    return featureIds.indexOf(id) === -1;
+  }), { silent: options.silent });
+
+  // Select any features in the new selection that were not already selected
+  this.select(featureIds.filter(function (id) {
+    return !_this6._selectedFeatureIds.has(id);
+  }), { silent: options.silent });
+
+  return this;
+};
+
+/**
+ * Sets the store's coordinates selection, clearing any prior values.
+ * @param {Array<Array<string>>} coordinates
+ * @return {Store} this
+ */
+Store.prototype.setSelectedCoordinates = function (coordinates) {
+  this._selectedCoordinates = coordinates;
+  this._emitSelectionChange = true;
+  return this;
+};
+
+/**
+ * Clears the current coordinates selection.
+ * @param {Object} [options]
