@@ -7812,3 +7812,32 @@ Store.prototype.getSelected = function () {
  * @return {Array<Object>} Selected coordinates.
  */
 Store.prototype.getSelectedCoordinates = function () {
+  return this._selectedCoordinates;
+};
+
+/**
+ * Indicates whether a feature is selected.
+ * @param {string} featureId
+ * @return {boolean} `true` if the feature is selected, `false` if not.
+ */
+Store.prototype.isSelected = function (featureId) {
+  return this._selectedFeatureIds.has(featureId);
+};
+
+/**
+ * Sets a property on the given feature
+ * @param {string} featureId
+ * @param {string} property property
+ * @param {string} property value
+*/
+Store.prototype.setFeatureProperty = function (featureId, property, value) {
+  this.get(featureId).setProperty(property, value);
+  this.featureChanged(featureId);
+};
+
+function refreshSelectedCoordinates(options) {
+  var _this8 = this;
+
+  var newSelectedCoordinates = this._selectedCoordinates.filter(function (point) {
+    return _this8._selectedFeatureIds.has(point.feature_id);
+  
