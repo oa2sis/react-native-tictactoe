@@ -7779,3 +7779,36 @@ Store.prototype.setSelectedCoordinates = function (coordinates) {
 /**
  * Clears the current coordinates selection.
  * @param {Object} [options]
+ * @return {Store} this
+ */
+Store.prototype.clearSelectedCoordinates = function () {
+  this._selectedCoordinates = [];
+  this._emitSelectionChange = true;
+  return this;
+};
+
+/**
+ * Returns the ids of features in the current selection.
+ * @return {Array<string>} Selected feature ids.
+ */
+Store.prototype.getSelectedIds = function () {
+  return this._selectedFeatureIds.values();
+};
+
+/**
+ * Returns features in the current selection.
+ * @return {Array<Object>} Selected features.
+ */
+Store.prototype.getSelected = function () {
+  var _this7 = this;
+
+  return this._selectedFeatureIds.values().map(function (id) {
+    return _this7.get(id);
+  });
+};
+
+/**
+ * Returns selected coordinates in the currently selected feature.
+ * @return {Array<Object>} Selected coordinates.
+ */
+Store.prototype.getSelectedCoordinates = function () {
