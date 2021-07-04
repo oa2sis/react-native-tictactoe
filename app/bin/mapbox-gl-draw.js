@@ -7840,4 +7840,36 @@ function refreshSelectedCoordinates(options) {
 
   var newSelectedCoordinates = this._selectedCoordinates.filter(function (point) {
     return _this8._selectedFeatureIds.has(point.feature_id);
-  
+  });
+  if (this._selectedCoordinates.length !== newSelectedCoordinates.length && !options.silent) {
+    this._emitSelectionChange = true;
+  }
+  this._selectedCoordinates = newSelectedCoordinates;
+}
+
+},{"./lib/string_set":50,"./lib/throttle":53,"./lib/to_dense_array":54,"./render":62}],65:[function(require,module,exports){
+'use strict';
+
+var xtend = require('xtend');
+var Constants = require('./constants');
+
+var classTypes = ['mode', 'feature', 'mouse'];
+
+module.exports = function (ctx) {
+
+  var buttonElements = {};
+  var activeButton = null;
+
+  var currentMapClasses = {
+    mode: null, // e.g. mode-direct_select
+    feature: null, // e.g. feature-vertex
+    mouse: null // e.g. mouse-move
+  };
+
+  var nextMapClasses = {
+    mode: null,
+    feature: null,
+    mouse: null
+  };
+
+  function queueM
