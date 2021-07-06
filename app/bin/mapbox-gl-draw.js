@@ -7872,4 +7872,34 @@ module.exports = function (ctx) {
     mouse: null
   };
 
-  function queueM
+  function queueMapClasses(options) {
+    nextMapClasses = xtend(nextMapClasses, options);
+  }
+
+  function updateMapClasses() {
+    if (!ctx.container) return;
+
+    var classesToRemove = [];
+    var classesToAdd = [];
+
+    classTypes.forEach(function (type) {
+      if (nextMapClasses[type] === currentMapClasses[type]) return;
+
+      classesToRemove.push(type + '-' + currentMapClasses[type]);
+      if (nextMapClasses[type] !== null) {
+        classesToAdd.push(type + '-' + nextMapClasses[type]);
+      }
+    });
+
+    if (classesToRemove.length > 0) {
+      ctx.container.classList.remove.apply(ctx.container.classList, classesToRemove);
+    }
+
+    if (classesToAdd.length > 0) {
+      ctx.container.classList.add.apply(ctx.container.classList, classesToAdd);
+    }
+
+    currentMapClasses = xtend(currentMapClasses, nextMapClasses);
+  }
+
+  function createControlButton(id)
