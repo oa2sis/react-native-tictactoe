@@ -7902,4 +7902,32 @@ module.exports = function (ctx) {
     currentMapClasses = xtend(currentMapClasses, nextMapClasses);
   }
 
-  function createControlButton(id)
+  function createControlButton(id) {
+    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    var button = document.createElement('button');
+    button.className = Constants.classes.CONTROL_BUTTON + ' ' + options.className;
+    button.setAttribute('title', options.title);
+    options.container.appendChild(button);
+
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var clickedButton = e.target;
+      if (clickedButton === activeButton) {
+        deactivateButtons();
+        return;
+      }
+
+      setActiveButton(id);
+      options.onActivate();
+    }, true);
+
+    return button;
+  }
+
+  function deactivateButtons() {
+    if (!activeButton) return;
+    activeButton.classList.remove(Constants.classes.ACTIVE_BUTTON);
+    activeButton = nu
