@@ -7957,4 +7957,24 @@ module.exports = function (ctx) {
         container: controlGroup,
         className: Constants.classes.CONTROL_BUTTON_LINE,
         title: 'LineString tool ' + (ctx.options.keybindings && '(l)'),
-        
+        onActivate: function onActivate() {
+          return ctx.events.changeMode(Constants.modes.DRAW_LINE_STRING);
+        }
+      });
+    }
+
+    if (controls[Constants.types.POLYGON]) {
+      buttonElements[Constants.types.POLYGON] = createControlButton(Constants.types.POLYGON, {
+        container: controlGroup,
+        className: Constants.classes.CONTROL_BUTTON_POLYGON,
+        title: 'Polygon tool ' + (ctx.options.keybindings && '(p)'),
+        onActivate: function onActivate() {
+          return ctx.events.changeMode(Constants.modes.DRAW_POLYGON);
+        }
+      });
+    }
+
+    if (controls[Constants.types.POINT]) {
+      buttonElements[Constants.types.POINT] = createControlButton(Constants.types.POINT, {
+        container: controlGroup,
+        className: Constants.cla
