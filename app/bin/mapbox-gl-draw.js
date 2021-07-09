@@ -7930,4 +7930,31 @@ module.exports = function (ctx) {
   function deactivateButtons() {
     if (!activeButton) return;
     activeButton.classList.remove(Constants.classes.ACTIVE_BUTTON);
-    activeButton = nu
+    activeButton = null;
+  }
+
+  function setActiveButton(id) {
+    deactivateButtons();
+
+    var button = buttonElements[id];
+    if (!button) return;
+
+    if (button && id !== 'trash') {
+      button.classList.add(Constants.classes.ACTIVE_BUTTON);
+      activeButton = button;
+    }
+  }
+
+  function addButtons() {
+    var controls = ctx.options.controls;
+    var controlGroup = document.createElement('div');
+    controlGroup.className = Constants.classes.CONTROL_GROUP + ' ' + Constants.classes.CONTROL_BASE;
+
+    if (!controls) return controlGroup;
+
+    if (controls[Constants.types.LINE]) {
+      buttonElements[Constants.types.LINE] = createControlButton(Constants.types.LINE, {
+        container: controlGroup,
+        className: Constants.classes.CONTROL_BUTTON_LINE,
+        title: 'LineString tool ' + (ctx.options.keybindings && '(l)'),
+        
