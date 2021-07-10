@@ -7977,4 +7977,29 @@ module.exports = function (ctx) {
     if (controls[Constants.types.POINT]) {
       buttonElements[Constants.types.POINT] = createControlButton(Constants.types.POINT, {
         container: controlGroup,
-        className: Constants.cla
+        className: Constants.classes.CONTROL_BUTTON_POINT,
+        title: 'Marker tool ' + (ctx.options.keybindings && '(m)'),
+        onActivate: function onActivate() {
+          return ctx.events.changeMode(Constants.modes.DRAW_POINT);
+        }
+      });
+    }
+
+    if (controls.trash) {
+      buttonElements.trash = createControlButton('trash', {
+        container: controlGroup,
+        className: Constants.classes.CONTROL_BUTTON_TRASH,
+        title: 'Delete',
+        onActivate: function onActivate() {
+          ctx.events.trash();
+        }
+      });
+    }
+
+    if (controls.combine_features) {
+      buttonElements.combine_features = createControlButton('combineFeatures', {
+        container: controlGroup,
+        className: Constants.classes.CONTROL_BUTTON_COMBINE_FEATURES,
+        title: 'Combine',
+        onActivate: function onActivate() {
+          ct
