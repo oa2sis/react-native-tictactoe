@@ -8002,4 +8002,35 @@ module.exports = function (ctx) {
         className: Constants.classes.CONTROL_BUTTON_COMBINE_FEATURES,
         title: 'Combine',
         onActivate: function onActivate() {
-          ct
+          ctx.events.combineFeatures();
+        }
+      });
+    }
+
+    if (controls.uncombine_features) {
+      buttonElements.uncombine_features = createControlButton('uncombineFeatures', {
+        container: controlGroup,
+        className: Constants.classes.CONTROL_BUTTON_UNCOMBINE_FEATURES,
+        title: 'Uncombine',
+        onActivate: function onActivate() {
+          ctx.events.uncombineFeatures();
+        }
+      });
+    }
+
+    return controlGroup;
+  }
+
+  function removeButtons() {
+    Object.keys(buttonElements).forEach(function (buttonId) {
+      var button = buttonElements[buttonId];
+      if (button.parentNode) {
+        button.parentNode.removeChild(button);
+      }
+      delete buttonElements[buttonId];
+    });
+  }
+
+  return {
+    setActiveButton: setActiveButton,
+    queueMapClasses: queueMapClasses,
