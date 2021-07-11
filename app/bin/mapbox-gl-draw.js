@@ -8034,3 +8034,11 @@ module.exports = function (ctx) {
   return {
     setActiveButton: setActiveButton,
     queueMapClasses: queueMapClasses,
+    updateMapClasses: updateMapClasses,
+    addButtons: addButtons,
+    removeButtons: removeButtons
+  };
+};
+
+},{"./constants":26,"xtend":24}]},{},[1])(1)
+});
