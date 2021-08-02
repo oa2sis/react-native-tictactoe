@@ -18,4 +18,11 @@ var App = React.createClass({
         <Header />
         <main className='main' role='main'>
           {this.props.children}
-        </
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+});
+
+export default connect(state => state)(App);
