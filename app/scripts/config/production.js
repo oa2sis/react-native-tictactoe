@@ -2,4 +2,5 @@
 
 module.exports = {
   environment: 'production',
-  baseUr
+  baseUrl: 'http://138.197.97.15'
+};
