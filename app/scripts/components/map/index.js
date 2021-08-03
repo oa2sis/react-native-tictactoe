@@ -343,3 +343,330 @@ export const Map = React.createClass({
   },
 
   getCoverTile: function (bounds, zoom) {
+    const limits = { min_zoom: zoom, max_zoom: zoom };
+    const feature = bboxPolygon(bounds[0].concat(bounds[1]));
+    const cover = tiles(feature.geometry, limits);
+
+    // if we have one tile to cover the area, return it, otherwise try at one
+    // zoom level up
+    return (cover.length === 1)
+    ? cover[0]
+    : this.getCoverTile(bounds, zoom - 1);
+  },
+
+  loadMapData: function (mapEvent) {
+    if (!mapEvent.target.getBounds || this.props.draw.mode === INACTIVE) return;
+    const coverTile = this.getCoverTile(
+      mapEvent.target.getBounds().toArray(),
+      Math.floor(mapEvent.target.getZoom())
+    );
+
+    // only fetch new data if we haven't requested this tile before
+    if (!this.props.map.requestedTiles.has(coverTile.join('/'))) {
+      this.props.dispatch(fetchMapData(coverTile));
+    }
+  },
+
+  markAsEdited: function (feature) {
+    console.log('marking as edited');
+    if (feature.properties.status !== EDITED) {
+      feature.properties.status = EDITED;
+      this.draw.add(feature);
+    }
+  },
+
+  splitLine: function (e) {
+    const { draw } = this;
+    const ids = draw.getFeatureIdsAt(e.point);
+    if (!ids.length) { return; }
+    const line = draw.get(ids[0]);
+    const cursorAt = point([e.lngLat.lng, e.lngLat.lat]);
+
+    // delete the existing line, and add two additional lines.
+    draw.delete(line.id);
+    const newIds = [];
+    newIds.push(draw.add(lineSlice(point(firstCoord(line)), cursorAt, line)));
+    newIds.push(draw.add(lineSlice(cursorAt, point(lastCoord(line)), line)));
+
+    this.splitMode({ featureIds: newIds });
+    const newLines = newIds.map(id => draw.get(id));
+
+    // Mark the new lines as edited
+    newLines.forEach(this.markAsEdited);
+    const actions = newLines.map(createRedo).concat(createUndo(line));
+    this.props.dispatch(updateSelection(actions));
+  },
+
+  joinLines: function (e) {
+    const { draw, props } = this;
+
+    const cursor = point([e.lngLat.lng, e.lngLat.lat]);
+    const featureIds = draw.getFeatureIdsAt(e.point);
+
+    // a length of 2 means we're hovering over a feature
+    if (featureIds.length > 1) {
+      // the first item in the array seems to always be the one the user is continuing from
+      const fromLineString = draw.get(featureIds[0]);
+      const originalFromLineString = fromLineString;
+      const toLineString = draw.get(featureIds[1]);
+      const mergedLineString = { type: 'Feature', properties: { status: EDITED } };
+      let nearest;
+      let minDist;
+
+      coordEach(toLineString, function (coord, i) {
+        var dist = distance(cursor, point(coord));
+
+        if (!minDist || dist < minDist) {
+          nearest = toLineString.geometry.coordinates[i];
+          minDist = dist;
+        }
+      });
+
+      // add point to front or back of fromLineString dependending on distance
+      // TODO: is there a way to get something like "most recent point i've continued from"
+      const fromFront = fromLineString.geometry.coordinates[0];
+      const fromBack = fromLineString.geometry.coordinates[fromLineString.geometry.coordinates.length - 1];
+      const frontDistance = distance(fromFront, nearest);
+      const backDistance = distance(fromBack, nearest);
+
+      if (frontDistance > backDistance) {
+        fromLineString.geometry.coordinates.push(nearest);
+      } else {
+        fromLineString.geometry.coordinates.unshift(nearest);
+      }
+
+      // merge the two lines together
+      mergedLineString.geometry = dissolve([fromLineString.geometry, toLineString.geometry]);
+
+      // delete old lines
+      draw.delete(fromLineString.id);
+      draw.delete(toLineString.id);
+
+      // add new merged line
+      const newId = draw.add(mergedLineString);
+      const newLine = draw.get(newId);
+
+      var actions = [
+        createUndo(originalFromLineString),
+        createUndo(toLineString),
+        createRedo(newLine)
+      ];
+
+      props.dispatch(changeDrawMode(null));
+      draw.changeMode('simple_select');
+      props.dispatch(updateSelection(actions));
+    }
+  },
+
+  setLineStatus: function (e) {
+    const { value } = e.currentTarget;
+    if (value === MULTIPLE) return;
+    const ids = this.state.selected.map(d => d.id);
+    // set the new completion status
+    ids.forEach(id => this.draw.setFeatureProperty(id, 'status', value));
+    // re-query the features and add to history
+    const updatedFeatures = ids.map(id => this.draw.get(id));
+    this.handleUpdate(updatedFeatures);
+  },
+
+  toggleVisibility: function (status) {
+    this.props.dispatch(toggleVisibility(status));
+  },
+
+  toggleExistingRoads: function () {
+    this.props.dispatch(toggleExistingRoads());
+  },
+
+  delete: function () {
+    // override draw functionality for specific case:
+    // line selected, no point selected, in direct_select mode
+    const mode = this.draw.getMode();
+    const selected = this.draw.getSelected().features;
+    const selectedPoints = this.draw.getSelectedPoints().features;
+    if (mode === 'direct_select' && selected.length && !selectedPoints.length) {
+      this.draw.delete(selected.map(f => f.id));
+      this.handleDelete(selected);
+      this.setState({ selected: [] });
+    } else {
+      // use native draw delete, event handlers handle the rest
+      this.draw.trash();
+    }
+  },
+
+  render: function () {
+    if (!App.glSupport) { return noGl; }
+    const { save } = this.props;
+    const { past, future } = this.props.selection;
+    const isSynced = !past.length || save.historyId === past[past.length - 1].historyId;
+    const selectedFeatures = this.state.selected;
+    const statuses = uniq(selectedFeatures.map(d => d.properties.status || INCOMPLETE));
+    const status = !statuses.length ? null
+      : statuses.length > 1 ? MULTIPLE : statuses[0];
+    const hidden = this.props.draw.hidden;
+    const uiDisabled = this.props.draw.mode === INACTIVE;
+    const showExistingRoads = this.props.map.showExistingRoads;
+
+    return (
+      <div className='map__container' ref={this.initMap} id={id}>
+        {uiDisabled ? (
+          <div className='menubar menubar--disabled'>
+            <div className='row'>
+              <button className='button button-base' onClick={() => this.map.zoomTo(minTileZoom)}>Zoom to edit</button>
+            </div>
+          </div>
+        ) : (
+          <div className='menubar'>
+            <div className='row'>
+              <ul>
+                <li className={c({ disabled: !selectedFeatures.length })}>
+                  <label>Line Status</label>
+                  <div className={c('select-wrapper')}>
+                    <select value={status || ''} onChange={this.setLineStatus}>
+                      {!selectedFeatures.length && <option value=''></option>}
+                      {status === MULTIPLE && <option value={MULTIPLE}>Multiple</option>}
+                      <option value={INCOMPLETE}>Incomplete</option>
+                      <option value={EDITED}>In Progress</option>
+                      <option value={COMPLETE}>Complete</option>
+                    </select>
+                  </div>
+                </li>
+                <li>
+                  <button className={c({disabled: !past.length}, 'button button-undo button--outline')} onClick={this.undo}>Undo{this.help('bottom', 'ctrl+z')}</button>
+                  <button className={c({disabled: !future.length}, 'button button-redo button--outline')} onClick={this.redo}>Redo{this.help('bottom', 'ctrl+shift+z')}</button>
+                </li>
+                <li>
+                  <button className={c({disabled: isSynced}, 'button button-base')} onClick={this.save}>SAVE CHANGES{this.help('bottom', 'ctrl+s')}</button>
+                  {save.inflight ? <span style={{float: 'right'}}>Saving...</span> : null}
+                  {save.success ? <span style={{float: 'right'}}>Success!</span> : null}
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        <div className='tool-bar'>
+          {uiDisabled ? <span /> : (
+            <fieldset className='tools'>
+              <legend>Tools</legend>
+              <ul>
+                <li className='tool--line tool__item' onClick={this.newLineMode}>
+                  <a href="#">
+                    <img alt='Add Line' src='../graphics/layout/icon-line.svg' />
+                  </a>
+                  {this.help('top', 'd')}
+                </li>
+                <li
+                  className={c('tool--line-add tool__item',
+                  { disabled: !this.draw || (this.draw && !this.isLineContinuationValid() && this.props.draw.mode !== CONTINUE) },
+                  { active: this.props.draw.mode === CONTINUE }
+                  )}
+                  onClick={this.lineContinuationMode}
+                  >
+                  <a href="#">
+                    <img alt='Add Point' src='../graphics/layout/icon-addline.svg' />
+                  </a>
+                  {this.help('top', 'c')}
+                </li>
+                <li className={c('tool--cut tool__item', {active: this.props.draw.mode === SPLIT})}>
+                  <a onClick={this.splitMode} href="#">
+                    <img alt='Split Line' src='../graphics/layout/icon-cut.svg' />
+                  </a>
+                  {this.help('bottom', 's')}
+                </li>
+                <li className='tool--trash tool__item' onClick={this.delete}>
+                  <a href="#">
+                    <img alt='delete' src='../graphics/layout/icon-trash.svg' />
+                  </a>
+                  {this.help('bottom', 'del')}
+                </li>
+              </ul>
+            </fieldset>
+          )}
+
+          {uiDisabled ? <span /> : (
+            <fieldset className='toggle'>
+              <legend>Predicted Road Layers</legend>
+              <ul>
+                <li className='toggle__item toggle__all'>
+                  <a className={c({showall: hidden.length >= 1})} href="#" onClick={this.toggleVisibility.bind(this, 'all')}>
+                    <icon className='visibility'><span>Hide/Show</span></icon>
+                    <span className='line-description'>All Predicted</span>
+                  </a>
+                </li>
+                <li className='toggle__item'>
+                  <a className={c({showall: hidden.indexOf(INCOMPLETE) > -1})} href="#" onClick={this.toggleVisibility.bind(this, INCOMPLETE)}>
+                    <icon className='visibility'><span>Hide/Show</span></icon>
+                    <span className='line__item line--incomplete line-description'>Incomplete</span>
+                  </a>
+                </li>
+                <li className='toggle__item'>
+                  <a className={c({showall: hidden.indexOf(EDITED) > -1})} href="#" onClick={this.toggleVisibility.bind(this, EDITED)}>
+                    <icon className='visibility'><span>Hide/Show</span></icon>
+                    <span className='line-description line__item line--progress'>In Progress</span>
+                  </a>
+                </li>
+                <li className='toggle__item'>
+                  <a className={c({showall: hidden.indexOf(COMPLETE) > -1})} href="#" onClick={this.toggleVisibility.bind(this, COMPLETE)}>
+                    <icon className='visibility'><span>Hide/Show</span></icon>
+                    <span className='line-description line__item line--complete'>Complete</span>
+                  </a>
+                </li>
+              </ul>
+            </fieldset>
+          )}
+
+          <fieldset className='toggle'>
+            <legend>Existing Road Network Layers</legend>
+            <ul>
+              <li className='toggle__item'>
+                <a className={c({showall: showExistingRoads})} href="#" onClick={this.toggleExistingRoads}>
+                  <icon className='visibility'><span>Hide/Show</span></icon>
+                  <span className='line__item line--existing line-description'>Existing roads</span>
+                </a>
+              </li>
+            </ul>
+          </fieldset>
+        </div>
+      </div>
+    );
+  },
+
+  help: function (position, text) {
+    if (!this.state.showHelp) return null;
+    const outerClass = 'help help__' + position;
+    return (
+      <div className={outerClass}>
+        <div className='help__in'>
+          {text}
+        </div>
+      </div>
+    );
+  },
+
+  propTypes: {
+    dispatch: React.PropTypes.func,
+    selection: React.PropTypes.object,
+    map: React.PropTypes.object,
+    draw: React.PropTypes.object,
+    save: React.PropTypes.object
+  }
+});
+
+function createUndo (f) {
+  return { id: f.id, undo: f, redo: null };
+}
+
+function createRedo (f) {
+  return { id: f.id, undo: null, redo: f };
+}
+
+function mapStateToProps (state) {
+  return {
+    selection: state.selection,
+    map: state.map,
+    draw: state.draw,
+    save: state.save
+  };
+}
+
+export default connect(mapStateToProps)(Map);
