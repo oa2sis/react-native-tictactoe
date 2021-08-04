@@ -10,4 +10,51 @@
     max-width: 440px;
     background: #fff;
     h1 {
- 
+      font-size: 24px;
+      line-height: 1.1;
+      margin-bottom: 32px;
+    }
+  }
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  font-family: $base-font-family;
+  font-weight: $base-font-regular;
+  letter-spacing: .4px;
+  font-size: 14px;
+}
+
+button {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 0;
+}
+
+.row {
+  @extend .clearfix;
+  max-width: 1280px;
+  padding: 0 64px;
+}
+
+.full, .main, .app {
+  height: inherit;
+}
+
+.header, .footer {
+  position: absolute;
+}
+
+.header {
+  top: 0;
+  height: 1em;
+}
+
+.footer {
+  bottom: 0;
+  height: 1em;
+}
+
