@@ -1,0 +1,27 @@
+{
+  "name": "skynet-scrub",
+  "version": "1.0.0",
+  "description": "A GUI for cleaning ML output",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/developmentseed/skynet-scrub"
+  },
+  "author": {
+    "name": "Development Seed",
+    "url": "https://developmentseed.org"
+  },
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/developmentseed/skynet-scrub/issues"
+  },
+  "homepage": "https://github.com/developmentseed/skynet-scrub",
+  "scripts": {
+    "serve": "DS_ENV=development gulp serve",
+    "build": "NODE_ENV=production gulp",
+    "lint": "./node_modules/.bin/eslint app/scripts/ test/ --ext .js",
+    "start": "npm run serve",
+    "test": "npm run lint; ./node_modules/.bin/tape -r babel-register -r babel-polyfill test/**/*.js"
+  },
+  "browserify": {
+    "transform": [
+      

@@ -216,3 +216,27 @@ gulp.task('images', function () {
       $.imagemin.jpegtran({progressive: true}),
       $.imagemin.optipng({optimizationLevel: 5}),
       // don't remove IDs from SVGs, they are often used
+      // as hooks for embedding and styling
+      $.imagemin.svgo({plugins: [{cleanupIDs: false}]})
+    ])))
+    .pipe(gulp.dest('dist/graphics'));
+});
+
+gulp.task('fonts', function () {
+  return gulp.src('app/fonts/**/*')
+    .pipe(gulp.dest('.tmp/fonts'))
+    .pipe(gulp.dest('dist/fonts'));
+});
+
+gulp.task('extras', function () {
+  return gulp.src([
+    'app/**/*',
+    '!app/*.html',
+    '!app/graphics/**',
+    '!app/vendor/**',
+    '!app/styles/**',
+    '!app/scripts/**'
+  ], {
+    dot: true
+  }).pipe(gulp.dest('dist'));
+});
