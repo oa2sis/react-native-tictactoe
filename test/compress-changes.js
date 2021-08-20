@@ -62,4 +62,12 @@ test('compress changes', function (t) {
   }];
   let payload = compressChanges(selectionArray);
   t.equals(payload.find(d => d.id === 'a'), undefined); // a is created and deleted in the same change
-  t.d
+  t.deepEquals(payload.find(d => d.id === 'b'), { id: 'b', undo: 1, redo: 0 });
+  t.deepEquals(payload.find(d => d.id === 'c'), { id: 'c', undo: 0, redo: 1 });
+
+  payload = compressChanges(selectionArray, 1);
+  t.deepEquals(payload.find(d => d.id === 'a'), { id: 'a', undo: 2, redo: 0 });
+  t.deepEquals(payload.find(d => d.id === 'b'), { id: 'b', undo: 2, redo: 0 });
+  t.deepEquals(payload.find(d => d.id === 'c'), { id: 'c', undo: 0, redo: 1 });
+  t.end();
+});
