@@ -37,4 +37,33 @@ function setup (options) {
       future: []
     },
     map: {
-     
+      showExistingRoads: false
+    },
+    draw: {
+      mode: null,
+      hidden: []
+    },
+    save: {}
+  }, options);
+  const map = mount(<Map {...props} />);
+
+  return {
+    props,
+    map
+  };
+}
+
+test('map', function (t) {
+  const args = [];
+  setup({ dispatch: (d) => args.push(d) });
+  const event = {
+    features: [
+      {id: 1, type: 'Feature', geometry: {type: 'LineString', coordinates: [[1, 1], [2, 2]]}, properties: {}},
+      {id: 2, type: 'Feature', geometry: {type: 'LineString', coordinates: [[1, 1], [2, 2]]}, properties: {}},
+      {id: 3, type: 'Feature', geometry: {type: 'LineString', coordinates: [[1, 1], [2, 2]]}, properties: {}}
+    ]
+  };
+
+  App.map.fire('draw.create', event);
+  App.map.fire('draw.delete', event);
+  App.map.fire('draw.selectionchange', { features: [{id: 1, type: 'LineString', geometry
