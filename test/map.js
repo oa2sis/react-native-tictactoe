@@ -66,4 +66,10 @@ test('map', function (t) {
 
   App.map.fire('draw.create', event);
   App.map.fire('draw.delete', event);
-  App.map.fire('draw.selectionchange', { features: [{id: 1, type: 'LineString', geometry
+  App.map.fire('draw.selectionchange', { features: [{id: 1, type: 'LineString', geometry: {}, properties: {}}] });
+  App.map.fire('draw.update', event);
+
+  args.forEach(d => t.ok(d.type === 'UPDATE_SELECTION' || d.type === 'CHANGE_DRAW_MODE'));
+  t.equals(args.length, 5);
+  t.end();
+});
