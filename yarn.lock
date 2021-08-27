@@ -37,4 +37,29 @@
   version "0.18.1"
   resolved "https://registry.yarnpkg.com/@mapbox/mapbox-gl-draw/-/mapbox-gl-draw-0.18.1.tgz#4f52a770225ba004dd71baf5fe264f5d1c9d0b6c"
   dependencies:
-    "@mapbox/geojson-area" 
+    "@mapbox/geojson-area" "^0.2.1"
+    "@mapbox/geojson-normalize" "0.0.1"
+    "@mapbox/geojsonhint" "^2.0.0"
+    geojson-extent "^0.3.2"
+    hat "0.0.3"
+    lodash.isequal "^4.2.0"
+    point-geometry "0.1.0"
+    xtend "^4.0.1"
+
+"@mapbox/unitbezier@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@mapbox/unitbezier/-/unitbezier-0.0.0.tgz#15651bd553a67b8581fb398810c98ad86a34524e"
+
+"@turf/bbox-polygon@^3.0.10":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@turf/bbox-polygon/-/bbox-polygon-3.14.0.tgz#d004b0453f080e8f4f575f61dc936320c565747a"
+  dependencies:
+    "@turf/helpers" "^3.13.0"
+
+"@turf/bearing@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@turf/bearing/-/bearing-3.14.0.tgz#20027469ab2933ac08d7a29de4dee5ccaa6ac549"
+  dependencies:
+    "@turf/invariant" "^3.13.0"
+
+"@turf/buffer@^3.0
