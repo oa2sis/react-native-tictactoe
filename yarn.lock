@@ -86,4 +86,26 @@
 
 "@turf/distance@^3.14.0":
   version "3.14.0"
-  resolved "https://registry.yarnpkg.com/@turf/dis
+  resolved "https://registry.yarnpkg.com/@turf/distance/-/distance-3.14.0.tgz#71b0c6f265d23bb3004198e6da32f82964f42f8b"
+  dependencies:
+    "@turf/helpers" "^3.13.0"
+    "@turf/invariant" "^3.13.0"
+
+"@turf/distance@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/distance/-/distance-4.3.0.tgz#b533ba75936fea897ee1987824714b803df9061c"
+  dependencies:
+    "@turf/helpers" "^4.3.0"
+    "@turf/invariant" "^4.3.0"
+
+"@turf/helpers@^3.10.5", "@turf/helpers@^3.13.0":
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-3.13.0.tgz#d06078a1464cf56cdb7ea624ea1e13a71b88b806"
+
+"@turf/helpers@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-4.3.0.tgz#7b2f733aa0eb3ea1f07d467ac02ede00cc6cde0d"
+
+"@turf/invariant@^3.13.0":
+  version "3.13.0"
+  resolved "https://reg
