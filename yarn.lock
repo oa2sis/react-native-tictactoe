@@ -62,4 +62,28 @@
   dependencies:
     "@turf/invariant" "^3.13.0"
 
-"@turf/buffer@^3.0
+"@turf/buffer@^3.0.10":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@turf/buffer/-/buffer-3.14.0.tgz#65482c3c7a236d597faecb87b348c43dcdef093d"
+  dependencies:
+    "@mapbox/geojson-normalize" "0.0.1"
+    "@turf/combine" "^3.14.0"
+    "@turf/helpers" "^3.13.0"
+    jsts "1.3.0"
+
+"@turf/combine@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@turf/combine/-/combine-3.14.0.tgz#d6aa15e20c7a217bf4dd19f0347ec848135cf222"
+  dependencies:
+    "@turf/meta" "^3.14.0"
+
+"@turf/destination@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@turf/destination/-/destination-3.14.0.tgz#ec9e65c419d99733bcaeb03f39b48f42d54ac36c"
+  dependencies:
+    "@turf/helpers" "^3.13.0"
+    "@turf/invariant" "^3.13.0"
+
+"@turf/distance@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@turf/dis
