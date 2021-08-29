@@ -108,4 +108,26 @@
 
 "@turf/invariant@^3.13.0":
   version "3.13.0"
-  resolved "https://reg
+  resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-3.13.0.tgz#89243308cd563206e81e5c6162e0d22f61822f90"
+
+"@turf/invariant@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-4.3.0.tgz#5bd1ce6ae51b1229dc0dc7d09d973fabae49af89"
+
+"@turf/line-slice@^3.11.7":
+  version "3.14.2"
+  resolved "https://registry.yarnpkg.com/@turf/line-slice/-/line-slice-3.14.2.tgz#5ef09190bc64b6a7b7dd988567246c9bd25bbdda"
+  dependencies:
+    "@turf/bearing" "^3.14.0"
+    "@turf/destination" "^3.14.0"
+    "@turf/distance" "^3.14.0"
+    "@turf/helpers" "^3.13.0"
+    "@turf/point-on-line" "^3.14.2"
+
+"@turf/meta@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-3.14.0.tgz#8d3050c1a0f44bf406a633b6bd28c510f7bcee27"
+
+"@turf/meta@^4.0.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@turf/meta/-/
