@@ -3268,4 +3268,22 @@ geojson-extent@^0.3.2:
     rw "~0.1.4"
     traverse "~0.6.6"
 
-geojson-flatten@~0.
+geojson-flatten@~0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/geojson-flatten/-/geojson-flatten-0.1.0.tgz#c1c6f96bbb5713114c9b14a0b4ba80f47e4622cb"
+  dependencies:
+    concat-stream "~1.2.1"
+    minimist "0.0.5"
+    sharkdown "~0.1.0"
+
+geojson-linestring-dissolve@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/geojson-linestring-dissolve/-/geojson-linestring-dissolve-0.0.1.tgz#08ab8cdf386e919d35a0eb38fa1c550e020838db"
+
+geojson-normalize@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/geojson-normalize/-/geojson-normalize-0.0.0.tgz#2dbc3678cd1b31b8179e876bda70cd120dde35c0"
+
+"geojson-random@git://github.com/developmentseed/geojson-random.git#d1a40194491aacc9c1f08533b0acd1cd7cc560aa":
+  version "0.2.2"
+  resolved "git://github.com/developmentseed/geojson-random.git#d1a40
