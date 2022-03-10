@@ -3286,4 +3286,30 @@ geojson-normalize@0.0.0:
 
 "geojson-random@git://github.com/developmentseed/geojson-random.git#d1a40194491aacc9c1f08533b0acd1cd7cc560aa":
   version "0.2.2"
-  resolved "git://github.com/developmentseed/geojson-random.git#d1a40
+  resolved "git://github.com/developmentseed/geojson-random.git#d1a40194491aacc9c1f08533b0acd1cd7cc560aa"
+  dependencies:
+    from2 "^2.1.0"
+    geojson-stream "0.0.0"
+
+geojson-rewind@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/geojson-rewind/-/geojson-rewind-0.1.0.tgz#57022a054b196660d755354fe5d26684d90cd019"
+  dependencies:
+    concat-stream "~1.2.1"
+    geojson-area "0.1.0"
+    minimist "0.0.5"
+
+geojson-stream@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/geojson-stream/-/geojson-stream-0.0.0.tgz#e5e09a0633ad1a63a4aec5d7c5312a3b8f91a048"
+  dependencies:
+    JSONStream "~0.7.1"
+    through "~2.3.4"
+
+geojson-vt@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/geojson-vt/-/geojson-vt-2.4.0.tgz#3c1cf44493f35eb4d2c70c95da6550de66072c05"
+
+get-caller-file@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.
