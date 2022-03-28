@@ -3710,4 +3710,35 @@ gulp-sourcemaps@^1.6.0:
     css "2.X"
     debug-fabulous "0.0.X"
     detect-newline "2.X"
-    gracef
+    graceful-fs "4.X"
+    source-map "0.X"
+    strip-bom "2.X"
+    through2 "2.X"
+    vinyl "1.X"
+
+gulp-uglify@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/gulp-uglify/-/gulp-uglify-2.1.2.tgz#6db85b1d0ee63d18058592b658649d65c2ec4541"
+  dependencies:
+    gulplog "^1.0.0"
+    has-gulplog "^0.1.0"
+    lodash "^4.13.1"
+    make-error-cause "^1.1.1"
+    through2 "^2.0.0"
+    uglify-js "~2.8.10"
+    uglify-save-license "^0.4.1"
+    vinyl-sourcemaps-apply "^0.2.0"
+
+gulp-useref@^3.1.0:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/gulp-useref/-/gulp-useref-3.1.2.tgz#dec67024a96e685eeb9d9d8153c64a5d5c5e3cf6"
+  dependencies:
+    event-stream "^3.3.1"
+    glob "^7.0.3"
+    gulp-concat "^2.5.2"
+    gulp-if "^2.0.0"
+    gulp-util "^3.0.1"
+    is-relative-url "1.0.0"
+    through2 "^2.0.1"
+    useref "^1.2.0"
+    vinyl
