@@ -5108,4 +5108,24 @@ mapbox-gl-js-mock@^0.28.0:
 
 "mapbox-gl-shaders@github:mapbox/mapbox-gl-shaders#44b65f8090a74cbb0319664d010b8d8a8a1512b0":
   version "1.0.0"
-  resolved "https://codeload.g
+  resolved "https://codeload.github.com/mapbox/mapbox-gl-shaders/tar.gz/44b65f8090a74cbb0319664d010b8d8a8a1512b0"
+  dependencies:
+    brfs "^1.4.0"
+
+"mapbox-gl-style-spec@github:mapbox/mapbox-gl-style-spec#7d330d2abf1775abc95ab8b889089cf5ff579357":
+  version "8.9.0"
+  resolved "https://codeload.github.com/mapbox/mapbox-gl-style-spec/tar.gz/7d330d2abf1775abc95ab8b889089cf5ff579357"
+  dependencies:
+    csscolorparser "~1.0.2"
+    jsonlint-lines-primitives "~1.6.0"
+    lodash.isequal "^3.0.4"
+    minimist "0.0.8"
+    rw "^0.1.4"
+    sort-object "^0.3.2"
+
+"mapbox-gl-style-spec@github:mapbox/mapbox-gl-style-spec#d11f6d2775bf5b22534b3b2fb3410755b2473cdf":
+  version "8.11.0"
+  resolved "https://codeload.github.com/mapbox/mapbox-gl-style-spec/tar.gz/d11f6d2775bf5b22534b3b2fb3410755b2473cdf"
+  dependencies:
+    csscolorparser "~1.0.2"
+    f
